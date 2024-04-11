@@ -1,0 +1,88 @@
+{
+  "name": "react-teleport-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "postinstall": "papi",
+    "dev": "vite",
+    "build": "papi && tsc && vite build",
+    "gh-build": "papi && tsc && vite build --base=/react-teleport-example/",
+    "format": "prettier --write README.md \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
+    "preview": "vite preview"
+  },
+  "pnpm": {
+    "overrides": {
+      "smoldot": "2.0.23"
+    }
+  },
+  "dependencies": {
+    "@polkadot-api/descriptors": "^0.0.1",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.368.0",
+    "polkadot-api": "^0.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1",
+    "smoldot": "2.0.23",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.2.77",
+    "@types/react-dom": "^18.2.25",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": false,
+    "trailingComma": "all"
+  },
+  "polkadot-api": {
+    "wnd": {
+      "chain": "westend2",
+      "metadata": "wnd.scale"
+    },
+    "wndAssethub": {
+      "wsUrl": "wss://westend-asset-hub-rpc.polkadot.io",
+      "metadata": "wndAssethub.scale"
+    },
+    "dot": {
+      "chain": "polkadot",
+      "metadata": "dot.scale"
+    },
+    "ksm": {
+      "chain": "ksmcc3",
+      "metadata": "ksm.scale"
+    },
+    "dotAh": {
+      "wsUrl": "wss://polkadot-asset-hub-rpc.polkadot.io",
+      "metadata": "dotAh.scale"
+    },
+    "ksmAh": {
+      "wsUrl": "wss://kusama-asset-hub-rpc.polkadot.io",
+      "metadata": "ksmAh.scale"
+    },
+    "roc": {
+      "chain": "rococo_v2_2",
+      "metadata": "roc.scale"
+    },
+    "rocAh": {
+      "wsUrl": "wss://rococo-asset-hub-rpc.dwellir.com",
+      "metadata": "rocAh.scale"
+    }
+  }
+}
