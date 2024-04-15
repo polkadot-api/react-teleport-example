@@ -4,7 +4,7 @@ import wnd from "./wnd"
 import roc from "./roc"
 import { AssetId, AssetInChain, ChainId } from "./types"
 
-const assetsInChains = [...wnd, ...roc, ...dot, ...ksm]
+const assetsInChains = [...dot, ...ksm, ...wnd, ...roc]
 
 export const chains = new Map<ChainId, Map<AssetId, AssetInChain>>()
 assetsInChains.forEach((assetinChain) => {
