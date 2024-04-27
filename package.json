@@ -4,17 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "papi",
+    "postinstall": "papi --whitelist whitelist.ts",
     "dev": "vite",
-    "build": "papi && tsc && vite build",
-    "gh-build": "papi && tsc && vite build --base=/react-teleport-example/",
+    "build": "papi --whitelist whitelist.ts && tsc && vite build",
+    "gh-build": "papi --whitelist whitelist.ts && tsc && vite build --base=/react-teleport-example/",
     "format": "prettier --write README.md \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
     "preview": "vite preview"
-  },
-  "pnpm": {
-    "overrides": {
-      "smoldot": "2.0.23"
-    }
   },
   "dependencies": {
     "@polkadot-api/descriptors": "^0.0.1",
@@ -24,27 +19,26 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.0",
-    "lucide-react": "^0.368.0",
-    "polkadot-api": "^0.2.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.376.0",
+    "polkadot-api": "^0.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rxjs": "^7.8.1",
-    "smoldot": "2.0.23",
-    "tailwind-merge": "^2.2.2",
+    "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.77",
-    "@types/react-dom": "^18.2.25",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10"
   },
   "prettier": {
     "printWidth": 80,

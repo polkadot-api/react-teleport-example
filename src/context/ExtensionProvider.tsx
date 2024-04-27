@@ -56,6 +56,7 @@ const getExtensionsStore = () => {
 }
 
 const extensionsStore = getExtensionsStore()
+extensionsStore.subscribe(Function.prototype as any)
 
 export const ExtensionProvider: React.FC<PropsWithChildren> = ({
   children,
