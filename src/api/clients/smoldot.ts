@@ -57,7 +57,8 @@ const getTickDate = () => tickDate
 */
 
 export const smoldot = startFromWorker(
-  new SmWorker() /*, {
+  new SmWorker(),
+  { forbidWs: true } /*, {
   maxLogLevel: 9,
   logCallback: (level: number, target: string, message: string) => {
     messages.push(`${getTickDate()} (${level})${target}\n${message}\n\n`)
