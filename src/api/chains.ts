@@ -7,6 +7,7 @@ import { AssetId, AssetInChain, ChainId } from "./types"
 const assetsInChains = [...dot, ...ksm, ...wnd, ...roc]
 
 export const chains = new Map<ChainId, Map<AssetId, AssetInChain>>()
+
 assetsInChains.forEach((assetinChain) => {
   const { chain, symbol } = assetinChain
   if (!chains.has(chain)) chains.set(chain, new Map())

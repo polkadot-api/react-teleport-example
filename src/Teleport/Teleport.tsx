@@ -38,31 +38,50 @@ const chainToSelectorValue = (chain: ChainId) => ({
   key: chain,
   display: CHAIN_NAMES[chain],
 })
-const getToChains = (from: ChainId, asset: AssetId): ChainId[] =>
-  Object.keys(chains.get(from)!.get(asset)!.teleport) as ChainId[]
 
+interface TeleporterState {
+  from: ChainId
+  to: { options: ChainId[]; selected: ChainId }
+  asset: { options: AssetId[]; selected: AssetId }
+}
 const teleportReducer: Reducer<
-  { from: ChainId; to: ChainId; asset: AssetId },
+  TeleporterState,
   { type: "from" | "to"; value: ChainId } | { type: "asset"; value: AssetId }
 > = (state, event) => {
-  if (event.type === "to") return { ...state, to: event.value }
+  if (event.type === "to")
+    return { ...state, to: { ...state.to, selected: event.value } }
 
   const from = event.type === "from" ? event.value : state.from
-  const asset =
-    event.type === "asset" ? event.value : [...chains.get(from)!.keys()][0]
-  const to = Object.keys(chains.get(from)!.get(asset)!.teleport)[0] as ChainId
+
+  let asset = state.asset
+  if (event.type === "asset") asset.selected = event.value
+  else {
+    asset.options = [...chains.get(from)!.keys()].filter(
+      (x) => Object.keys(chains.get(from)!.get(x)!.teleport).length,
+    )
+    asset.selected = asset.options[0]
+  }
+
+  const toOptions = Object.keys(
+    chains.get(from)!.get(asset.selected)!.teleport,
+  ) as ChainId[]
+  const to = { options: toOptions, selected: toOptions[0] }
 
   return { from, asset, to }
 }
 
+const initialState = teleportReducer({ asset: {} } as TeleporterState, {
+  type: "from",
+  value: "dot",
+})
+
 export const Teleport: React.FC = () => {
-  const [{ from, to, asset }, dispatch] = useReducer(teleportReducer, {
-    from: "dot",
-    to: "dotAh",
-    asset: "DOT",
-  })
+  const [{ from, to, asset }, dispatch] = useReducer(
+    teleportReducer,
+    initialState,
+  )
   const [amount, setAmount] = useState<number | null>(null)
-  const fromBalance = useBalance(from, asset)
+  const fromBalance = useBalance(from, asset.selected)
 
   return (
     <>
@@ -79,11 +98,11 @@ export const Teleport: React.FC = () => {
       <div className="flex flex-col space-y-1.5">
         <Label htmlFor="name">Asset:</Label>
         <Selector
-          value={asset}
+          value={asset.selected}
           onChange={(value) =>
             dispatch({ type: "asset", value: value as AssetId })
           }
-          values={[...chains.get(from)!.keys()].map((key) => ({
+          values={asset.options.map((key) => ({
             key,
             display: key,
           }))}
@@ -92,11 +111,11 @@ export const Teleport: React.FC = () => {
       <div className="flex flex-col space-y-1.5">
         <Label htmlFor="name">To Chain:</Label>
         <Selector
-          value={to}
+          value={to.selected}
           onChange={(value) =>
             dispatch({ type: "to", value: value as ChainId })
           }
-          values={getToChains(from, asset).map(chainToSelectorValue)}
+          values={to.options.map(chainToSelectorValue)}
         />
       </div>
       <Card className="w-full max-w-sm">
@@ -107,13 +126,18 @@ export const Teleport: React.FC = () => {
           <li className="flex items-center justify-between">
             <span className="text-muted-foreground">{CHAIN_NAMES[from]}</span>
             <span>
-              <FormattedToken asset={asset} value={fromBalance} />
+              <FormattedToken asset={asset.selected} value={fromBalance} />
             </span>
           </li>
           <li className="flex items-center justify-between">
-            <span className="text-muted-foreground">{CHAIN_NAMES[to]}</span>
+            <span className="text-muted-foreground">
+              {CHAIN_NAMES[to.selected]}
+            </span>
             <span>
-              <FormattedToken asset={asset} value={useBalance(to, asset)} />
+              <FormattedToken
+                asset={asset.selected}
+                value={useBalance(to.selected, asset.selected)}
+              />
             </span>
           </li>
         </ul>
@@ -131,7 +155,12 @@ export const Teleport: React.FC = () => {
           placeholder="Amount to teleport"
         />
       </div>
-      <FeesAndSubmit from={from} to={to} asset={asset} amount={amount} />
+      <FeesAndSubmit
+        from={from}
+        to={to.selected}
+        asset={asset.selected}
+        amount={amount}
+      />
     </>
   )
 }

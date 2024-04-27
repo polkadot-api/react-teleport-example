@@ -1,10 +1,8 @@
 import {
   XcmV3Junctions,
   XcmV3MultiassetAssetId,
-  XcmV3MultiassetFungibility,
   XcmV4Junction,
   XcmV4JunctionNetworkId,
-  XcmVersionedAssets,
   dotAh,
 } from "@polkadot-api/descriptors"
 import { dotAhClient } from "@/api/clients"
@@ -51,6 +49,7 @@ const ksm: AssetInChain = {
   symbol: "KSM",
   watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, ksmInDotAh),
   teleport: {
+    /*
     ksmAh: (from, amount, to) =>
       api.tx.PolkadotXcm.limited_reserve_transfer_assets(
         fromAssetHubToForeign(
@@ -66,6 +65,7 @@ const ksm: AssetInChain = {
           to,
         ),
       ),
+    */
   },
 }
 
