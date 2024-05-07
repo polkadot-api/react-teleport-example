@@ -1,11 +1,11 @@
 import { AccountId, PolkadotSigner, TypedApi } from "polkadot-api"
 import {
+  XcmV3Junction,
+  XcmV3JunctionNetworkId,
   XcmV3Junctions,
   XcmV3MultiassetAssetId,
   XcmV3MultiassetFungibility,
   XcmV3WeightLimit,
-  XcmV4Junction,
-  XcmV4JunctionNetworkId,
   XcmVersionedAssets,
   XcmVersionedLocation,
   dotAh,
@@ -19,7 +19,7 @@ export const getBeneficiary = (address: SS58String | Uint8Array) =>
   XcmVersionedLocation.V3({
     parents: 0,
     interior: XcmV3Junctions.X1(
-      XcmV4Junction.AccountId32({
+      XcmV3Junction.AccountId32({
         network: undefined,
         id: Binary.fromBytes(
           address instanceof Uint8Array ? address : encodeAccount(address),
@@ -46,7 +46,7 @@ export const fromRelayToAssetHub = (
 ) => ({
   dest: XcmVersionedLocation.V3({
     parents: 0,
-    interior: XcmV3Junctions.X1(XcmV4Junction.Parachain(1000)),
+    interior: XcmV3Junctions.X1(XcmV3Junction.Parachain(1000)),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets: getNativeAsset(0, amount),
@@ -70,7 +70,7 @@ export const fromAssetHubToRelay = (
 })
 
 export const fromAssetHubToForeign = (
-  network: XcmV4JunctionNetworkId,
+  network: XcmV3JunctionNetworkId,
   parachainId: number,
   assets: XcmVersionedAssets,
   from: PolkadotSigner,
@@ -79,8 +79,8 @@ export const fromAssetHubToForeign = (
   dest: XcmVersionedLocation.V3({
     parents: 2,
     interior: XcmV3Junctions.X2([
-      XcmV4Junction.GlobalConsensus(network),
-      XcmV4Junction.Parachain(parachainId),
+      XcmV3Junction.GlobalConsensus(network),
+      XcmV3Junction.Parachain(parachainId),
     ]),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
@@ -138,5 +138,7 @@ export const watchForeingAssetAccoutFreeBalance =
   ) =>
   (account: SS58String) =>
     api.query.ForeignAssets.Account.watchValue(asset, account, "best").pipe(
-      map((data) => (data?.status.is("Liquid") ? data.balance : 0n)),
+      map((data) =>
+        data?.status && Enum.is(data.status, "Liquid") ? data.balance : 0n,
+      ),
     )

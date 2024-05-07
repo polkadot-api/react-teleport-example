@@ -1,9 +1,9 @@
 import {
+  XcmV3Junction,
+  XcmV3JunctionNetworkId,
   XcmV3Junctions,
   XcmV3MultiassetAssetId,
   XcmV3MultiassetFungibility,
-  XcmV4Junction,
-  XcmV4JunctionNetworkId,
   XcmVersionedAssets,
   rocAh as descriptors,
 } from "@polkadot-api/descriptors"
@@ -30,7 +30,7 @@ const roc: AssetInChain = {
     wndAh: (from, amount, to) =>
       api.tx.PolkadotXcm.limited_reserve_transfer_assets(
         fromAssetHubToForeign(
-          XcmV4JunctionNetworkId.Westend(),
+          XcmV3JunctionNetworkId.Westend(),
           1000,
           getNativeAsset(1, amount),
           from,
@@ -43,7 +43,7 @@ const roc: AssetInChain = {
 const wndInRocAh: Parameters<typeof XcmV3MultiassetAssetId.Concrete>[0] = {
   parents: 2,
   interior: XcmV3Junctions.X1(
-    XcmV4Junction.GlobalConsensus(XcmV4JunctionNetworkId.Westend()),
+    XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Westend()),
   ),
 }
 
@@ -55,7 +55,7 @@ const wnd: AssetInChain = {
     wndAh: (from, amount, to) =>
       api.tx.PolkadotXcm.limited_reserve_transfer_assets(
         fromAssetHubToForeign(
-          XcmV4JunctionNetworkId.Westend(),
+          XcmV3JunctionNetworkId.Westend(),
           1000,
           XcmVersionedAssets.V3([
             {
