@@ -1,8 +1,8 @@
 import {
+  XcmV3Junction,
+  XcmV3JunctionNetworkId,
   XcmV3Junctions,
   XcmV3MultiassetAssetId,
-  XcmV4Junction,
-  XcmV4JunctionNetworkId,
   dotAh,
 } from "@polkadot-api/descriptors"
 import { dotAhClient } from "@/api/clients"
@@ -27,7 +27,7 @@ const dot: AssetInChain = {
     ksmAh: (from, amount, to) =>
       api.tx.PolkadotXcm.limited_reserve_transfer_assets(
         fromAssetHubToForeign(
-          XcmV4JunctionNetworkId.Kusama(),
+          XcmV3JunctionNetworkId.Kusama(),
           1000,
           getNativeAsset(1, amount),
           from,
@@ -40,7 +40,7 @@ const dot: AssetInChain = {
 const ksmInDotAh: Parameters<typeof XcmV3MultiassetAssetId.Concrete>[0] = {
   parents: 2,
   interior: XcmV3Junctions.X1(
-    XcmV4Junction.GlobalConsensus(XcmV4JunctionNetworkId.Kusama()),
+    XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Kusama()),
   ),
 }
 

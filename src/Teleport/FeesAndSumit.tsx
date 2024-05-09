@@ -119,7 +119,7 @@ export const FeesAndSubmit: React.FC<{
       )
 
       signSubmitAndWatch.current = call.signSubmitAndWatch
-      call.getEstimatedFees().then((fees) => {
+      call.getEstimatedFees(account.address).then((fees) => {
         if (token) setFees(fees)
       })
     }, 50)
