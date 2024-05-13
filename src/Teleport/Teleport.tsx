@@ -12,7 +12,7 @@ import {
 import { Card, CardHeader } from "@/components/ui/card"
 import { FormattedToken } from "./FormattedToken"
 import { Input } from "@/components/ui/input"
-import { FeesAndSubmit } from "./FeesAndSumit"
+import { FeesAndSubmit } from "./FeesAndSubmit"
 
 const Selector: React.FC<{
   value: string
