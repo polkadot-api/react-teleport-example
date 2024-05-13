@@ -49,10 +49,22 @@ const SubmitDialog: React.FC<
                     )
                     break
                   }
-                  case "bestChainBlockIncluded": {
-                    setDialogText(
-                      `The transaction was found in a best block (${e.block.hash}[${e.block.index}])`,
-                    )
+                  case "txBestBlocksState": {
+                    e.found
+                      ? setDialogText(
+                          `The transaction was found in a best block (${e.block.hash}[${e.block.index}]), ${
+                            e.ok
+                              ? "and it's being successful! 🎉"
+                              : "but it's failing... 😞"
+                          }`,
+                        )
+                      : e.isValid
+                        ? setDialogText(
+                            "The transaction has been validated and broadcasted",
+                          )
+                        : setDialogText(
+                            "The transaction is not valid anymore in the latest known best block",
+                          )
                     break
                   }
                   case "finalized": {
