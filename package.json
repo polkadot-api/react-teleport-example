@@ -75,7 +75,7 @@
       "metadata": "roc.scale"
     },
     "rocAh": {
-      "wsUrl": "wss://rococo-asset-hub-rpc.dwellir.com",
+      "wsUrl": "wss://asset-hub-rococo-rpc.dwellir.com",
       "metadata": "rocAh.scale"
     }
   },
