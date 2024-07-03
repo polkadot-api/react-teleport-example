@@ -12,19 +12,19 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
       '@radix-ui/react-dialog':
-        specifier: ^1.0.5
+        specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-label':
-        specifier: ^2.0.2
+        specifier: ^2.1.0
         version: 2.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-select':
-        specifier: ^2.0.0
+        specifier: ^2.1.1
         version: 2.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot':
-        specifier: ^1.0.2
+        specifier: ^1.1.0
         version: 1.1.0(@types/react@18.3.3)(react@18.3.1)
       '@radix-ui/react-tabs':
-        specifier: ^1.0.4
+        specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.0
@@ -55,7 +55,7 @@ importers:
         version: 1.0.7(tailwindcss@3.4.4)
     devDependencies:
       '@types/node':
-        specifier: ^20.12.13
+        specifier: ^20.14.9
         version: 20.14.9
       '@types/react':
         specifier: ^18.3.3
@@ -70,7 +70,7 @@ importers:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.39)
       postcss:
-        specifier: ^8.4.38
+        specifier: ^8.4.39
         version: 8.4.39
       prettier:
         specifier: ^3.2.5
@@ -79,10 +79,10 @@ importers:
         specifier: ^3.4.3
         version: 3.4.4
       typescript:
-        specifier: ^5.4.5
+        specifier: ^5.5.3
         version: 5.5.3
       vite:
-        specifier: ^5.2.12
+        specifier: ^5.3.3
         version: 5.3.3(@types/node@20.14.9)
 
 packages:
@@ -1841,8 +1841,8 @@ packages:
     resolution: {integrity: sha512-S7c5F2mpb5o+9pS1UfO3jcQb0OR25L7ZJT64cv3K0TkGh1VxJb+PNnL8b46KSJ6tmxIbA0xgHnrtBdVGeHmJ0A==}
     engines: {node: '>=18'}
 
-  ws@8.17.1:
-    resolution: {integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==}
+  ws@8.18.0:
+    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -2179,7 +2179,7 @@ snapshots:
       tsup: 8.1.0(postcss@8.4.39)(typescript@5.5.3)
       typescript: 5.5.3
       write-package: 7.0.1
-      ws: 8.17.1
+      ws: 8.18.0
     transitivePeerDependencies:
       - '@microsoft/api-extractor'
       - '@swc/core'
@@ -2276,7 +2276,7 @@ snapshots:
     dependencies:
       '@polkadot-api/json-rpc-provider': 0.0.1
       '@polkadot-api/json-rpc-provider-proxy': 0.1.0
-      ws: 8.17.1
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3320,7 +3320,7 @@ snapshots:
 
   smoldot@2.0.29:
     dependencies:
-      ws: 8.17.1
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3576,7 +3576,7 @@ snapshots:
       type-fest: 4.21.0
       write-json-file: 5.0.0
 
-  ws@8.17.1: {}
+  ws@8.18.0: {}
 
   yallist@3.1.1: {}
 
