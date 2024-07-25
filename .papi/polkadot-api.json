@@ -1,0 +1,38 @@
+{
+  "version": 0,
+  "descriptorPath": ".papi/descriptors",
+  "entries": {
+    "wnd": {
+      "chain": "westend2",
+      "metadata": ".papi/metadata/wnd.scale"
+    },
+    "wndAssethub": {
+      "wsUrl": "wss://westend-asset-hub-rpc.polkadot.io",
+      "metadata": ".papi/metadata/wndAssethub.scale"
+    },
+    "dot": {
+      "chain": "polkadot",
+      "metadata": ".papi/metadata/dot.scale"
+    },
+    "ksm": {
+      "chain": "ksmcc3",
+      "metadata": ".papi/metadata/ksm.scale"
+    },
+    "dotAh": {
+      "wsUrl": "wss://polkadot-asset-hub-rpc.polkadot.io",
+      "metadata": ".papi/metadata/dotAh.scale"
+    },
+    "ksmAh": {
+      "wsUrl": "wss://kusama-asset-hub-rpc.polkadot.io",
+      "metadata": ".papi/metadata/ksmAh.scale"
+    },
+    "roc": {
+      "chain": "rococo_v2_2",
+      "metadata": ".papi/metadata/roc.scale"
+    },
+    "rocAh": {
+      "wsUrl": "wss://asset-hub-rococo-rpc.dwellir.com",
+      "metadata": ".papi/metadata/rocAh.scale"
+    }
+  }
+}
