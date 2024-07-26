@@ -7,7 +7,6 @@
     "postinstall": "papi --whitelist whitelist.ts",
     "dev": "vite",
     "build": "papi --whitelist whitelist.ts && tsc && vite build",
-    "gh-build": "papi --whitelist whitelist.ts && tsc && vite build --base=/react-teleport-example/",
     "format": "prettier --write README.md \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
     "preview": "vite preview"
   },
