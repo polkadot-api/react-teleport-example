@@ -9,3 +9,6 @@ export { wndAhClient } from "./wndAh"
 
 export { rocClient } from "./roc"
 export { rocAhClient } from "./rocAh"
+
+export { pasClient } from "./pas"
+export { pasAhClient } from "./pasAh"

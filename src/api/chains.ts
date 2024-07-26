@@ -2,9 +2,10 @@ import dot from "./dot"
 import ksm from "./ksm"
 import wnd from "./wnd"
 import roc from "./roc"
+import pas from "./pas"
 import { AssetId, AssetInChain, ChainId } from "./types"
 
-const assetsInChains = [...dot, ...ksm, ...wnd, ...roc]
+const assetsInChains = [...dot, ...ksm, ...wnd, ...roc, ...pas]
 
 export const chains = new Map<ChainId, Map<AssetId, AssetInChain>>()
 
@@ -20,6 +21,7 @@ export const ASSET_DECIMALS: Record<AssetId, number> = {
   KSM: 12,
   WND: 12,
   ROC: 12,
+  PAS: 10,
 }
 
 export const CHAIN_NAMES: Record<ChainId, string> = {
@@ -31,4 +33,6 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   wndAh: "Westend AssetHub",
   roc: "Rococo RelayChain",
   rocAh: "Rococo AssetHub",
+  pas: "Paseo RelayChain",
+  pasAh: "Paseo AssetHub",
 }

@@ -33,6 +33,14 @@
     "rocAh": {
       "wsUrl": "wss://asset-hub-rococo-rpc.dwellir.com",
       "metadata": ".papi/metadata/rocAh.scale"
+    },
+    "pas": {
+      "chain": "paseo",
+      "metadata": ".papi/metadata/pas.scale"
+    },
+    "pasAh": {
+      "chain": "paseo_asset_hub",
+      "metadata": ".papi/metadata/pasAh.scale"
     }
   }
 }
