@@ -15,18 +15,24 @@ import { map } from "rxjs"
 
 const encodeAccount = AccountId().enc
 
-export const getBeneficiary = (address: SS58String | Uint8Array) =>
-  XcmVersionedLocation.V3({
+export const getBeneficiary = (address: SS58String | Uint8Array) => ({
+  type: "V3" as const,
+  value: {
     parents: 0,
-    interior: XcmV3Junctions.X1(
-      XcmV3Junction.AccountId32({
-        network: undefined,
-        id: Binary.fromBytes(
-          address instanceof Uint8Array ? address : encodeAccount(address),
-        ),
-      }),
-    ),
-  })
+    interior: {
+      type: "X1" as const,
+      value: {
+        type: "AccountId32" as const,
+        value: {
+          network: undefined,
+          id: Binary.fromBytes(
+            address instanceof Uint8Array ? address : encodeAccount(address),
+          ),
+        },
+      },
+    },
+  },
+})
 
 export const getNativeAsset = (parents: number, amount: bigint) =>
   XcmVersionedAssets.V3([
@@ -59,10 +65,19 @@ export const fromAssetHubToRelay = (
   amount: bigint,
   to?: SS58String,
 ) => ({
-  dest: XcmVersionedLocation.V3({
-    parents: 1,
-    interior: XcmV3Junctions.Here(),
-  }),
+  dest: {
+    type: "V3" as const,
+    value: {
+      parents: 0,
+      interior: {
+        type: "X1" as const,
+        value: {
+          type: "Parachain" as const,
+          value: 1000,
+        },
+      },
+    },
+  },
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets: getNativeAsset(1, amount),
   fee_asset_item: 0,
