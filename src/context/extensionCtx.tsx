@@ -4,7 +4,7 @@ import {
 } from "polkadot-api/pjs-signer"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
-const getJoinedInjectedExtensions = () => getInjectedExtensions()?.join(",")
+const getJoinedInjectedExtensions = () => getInjectedExtensions().join(",")
 
 export const useAvailableExtensions = (): string[] => {
   const [extensions, setExtensions] = useState(getJoinedInjectedExtensions)
@@ -23,7 +23,10 @@ export const useAvailableExtensions = (): string[] => {
     }
   }, [])
 
-  return useMemo(() => extensions?.split(",") ?? [], [extensions])
+  return useMemo(
+    () => (extensions.length ? extensions.split(",") : []),
+    [extensions],
+  )
 }
 
 export const extensionCtx = createContext<InjectedExtension[]>([])
