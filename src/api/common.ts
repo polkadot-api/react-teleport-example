@@ -68,13 +68,10 @@ export const fromAssetHubToRelay = (
   dest: {
     type: "V3" as const,
     value: {
-      parents: 0,
+      parents: 1,
       interior: {
-        type: "X1" as const,
-        value: {
-          type: "Parachain" as const,
-          value: 1000,
-        },
+        type: "Here" as const,
+        value: undefined,
       },
     },
   },
