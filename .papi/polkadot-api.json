@@ -41,6 +41,11 @@
     "pasAh": {
       "chain": "paseo_asset_hub",
       "metadata": ".papi/metadata/pasAh.scale"
+    },
+    "ksmEnc": {
+      "chain": "ksmcc3_encointer",
+      "wsUrl": "wss://kusama.api.encointer.org",
+      "metadata": ".papi/metadata/ksmEnc.scale"
     }
   }
 }
