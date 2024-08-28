@@ -2,7 +2,7 @@ import {
   XcmV3Junction,
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
-  XcmV3MultiassetAssetId,
+  XcmVersionedLocation,
   ksmAh,
 } from "@polkadot-api/descriptors"
 import { ksmAhClient } from "@/api/clients"
@@ -37,7 +37,7 @@ const ksm: AssetInChain = {
   },
 }
 
-const dotInKsmAh: Parameters<typeof XcmV3MultiassetAssetId.Concrete>[0] = {
+const dotInKsmAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
   parents: 2,
   interior: XcmV3Junctions.X1(
     XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Polkadot()),
@@ -55,9 +55,9 @@ const dot: AssetInChain = {
         fromAssetHubToForeign(
           XcmV4JunctionNetworkId.Polkadot(),
           1000,
-          XcmVersionedAssets.V3([
+          XcmVersionedAssets.V4([
             {
-              id: XcmV3MultiassetAssetId.Concrete(dotInKsmAh),
+              id: dotInKsmAh,
               fun: XcmV3MultiassetFungibility.Fungible(amount),
             },
           ]),

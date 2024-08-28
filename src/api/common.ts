@@ -3,7 +3,6 @@ import {
   XcmV3Junction,
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
-  XcmV3MultiassetAssetId,
   XcmV3MultiassetFungibility,
   XcmV3WeightLimit,
   XcmVersionedAssets,
@@ -15,32 +14,26 @@ import { map } from "rxjs"
 
 const encodeAccount = AccountId().enc
 
-export const getBeneficiary = (address: SS58String | Uint8Array) => ({
-  type: "V3" as const,
-  value: {
+export const getBeneficiary = (address: SS58String | Uint8Array) =>
+  XcmVersionedLocation.V4({
     parents: 0,
-    interior: {
-      type: "X1" as const,
-      value: {
-        type: "AccountId32" as const,
-        value: {
-          network: undefined,
-          id: Binary.fromBytes(
-            address instanceof Uint8Array ? address : encodeAccount(address),
-          ),
-        },
-      },
-    },
-  },
-})
+    interior: XcmV3Junctions.X1(
+      XcmV3Junction.AccountId32({
+        network: undefined,
+        id: Binary.fromBytes(
+          address instanceof Uint8Array ? address : encodeAccount(address),
+        ),
+      }),
+    ),
+  })
 
 export const getNativeAsset = (parents: number, amount: bigint) =>
-  XcmVersionedAssets.V3([
+  XcmVersionedAssets.V4([
     {
-      id: XcmV3MultiassetAssetId.Concrete({
+      id: {
         parents,
-        interior: Enum("Here"),
-      }),
+        interior: XcmV3Junctions.Here(),
+      },
       fun: XcmV3MultiassetFungibility.Fungible(amount),
     },
   ])
@@ -50,7 +43,7 @@ export const fromRelayToAssetHub = (
   amount: bigint,
   to?: SS58String,
 ) => ({
-  dest: XcmVersionedLocation.V3({
+  dest: XcmVersionedLocation.V4({
     parents: 0,
     interior: XcmV3Junctions.X1(XcmV3Junction.Parachain(1000)),
   }),
@@ -65,16 +58,10 @@ export const fromAssetHubToRelay = (
   amount: bigint,
   to?: SS58String,
 ) => ({
-  dest: {
-    type: "V3" as const,
-    value: {
-      parents: 1,
-      interior: {
-        type: "Here" as const,
-        value: undefined,
-      },
-    },
-  },
+  dest: XcmVersionedLocation.V4({
+    parents: 1,
+    interior: XcmV3Junctions.Here(),
+  }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets: getNativeAsset(1, amount),
   fee_asset_item: 0,
@@ -88,7 +75,7 @@ export const fromAssetHubToForeign = (
   from: PolkadotSigner,
   to?: SS58String,
 ) => ({
-  dest: XcmVersionedLocation.V3({
+  dest: XcmVersionedLocation.V4({
     parents: 2,
     interior: XcmV3Junctions.X2([
       XcmV3Junction.GlobalConsensus(network),
@@ -100,23 +87,6 @@ export const fromAssetHubToForeign = (
   fee_asset_item: 0,
   weight_limit: XcmV3WeightLimit.Unlimited(),
 })
-
-/*
-export const toAssetHub = (
-  from: PolkadotSigner,
-  amount: bigint,
-  to?: SS58String,
-) => ({
-  dest: XcmVersionedMultiLocation.V3({
-    parents: 1,
-    interior: DotXcmV3Junctions.Here(),
-  }),
-  beneficiary: getBeneficiary(to ?? from.publicKey),
-  assets: getNativeAsset(1, amount),
-  fee_asset_item: 0,
-  weight_limit: XcmV3WeightLimit.Unlimited(),
-})
-*/
 
 type GenericApi = TypedApi<typeof dotAh>
 

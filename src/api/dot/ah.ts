@@ -2,7 +2,7 @@ import {
   XcmV3Junction,
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
-  XcmV3MultiassetAssetId,
+  XcmVersionedLocation,
   dotAh,
 } from "@polkadot-api/descriptors"
 import { dotAhClient } from "@/api/clients"
@@ -37,7 +37,7 @@ const dot: AssetInChain = {
   },
 }
 
-const ksmInDotAh: Parameters<typeof XcmV3MultiassetAssetId.Concrete>[0] = {
+const ksmInDotAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
   parents: 2,
   interior: XcmV3Junctions.X1(
     XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Kusama()),
@@ -55,9 +55,9 @@ const ksm: AssetInChain = {
         fromAssetHubToForeign(
           XcmV4JunctionNetworkId.Kusama(),
           1000,
-          XcmVersionedAssets.V3([
+          XcmVersionedAssets.V4([
             {
-              id: XcmV3MultiassetAssetId.Concrete(ksmInDotAh),
+              id: ksmInDotAh,
               fun: XcmV3MultiassetFungibility.Fungible(amount),
             },
           ]),

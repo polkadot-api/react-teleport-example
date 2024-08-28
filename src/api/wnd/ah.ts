@@ -2,9 +2,9 @@ import {
   XcmV3Junction,
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
-  XcmV3MultiassetAssetId,
   XcmV3MultiassetFungibility,
   XcmVersionedAssets,
+  XcmVersionedLocation,
   wndAssethub as descriptors,
 } from "@polkadot-api/descriptors"
 import { wndAhClient } from "@/api/clients"
@@ -39,7 +39,7 @@ const wnd: AssetInChain = {
   },
 }
 
-const rocInWndAh: Parameters<typeof XcmV3MultiassetAssetId.Concrete>[0] = {
+const rocInWndAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
   parents: 2,
   interior: XcmV3Junctions.X1(
     XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Rococo()),
@@ -56,9 +56,9 @@ const roc: AssetInChain = {
         fromAssetHubToForeign(
           XcmV3JunctionNetworkId.Rococo(),
           1000,
-          XcmVersionedAssets.V3([
+          XcmVersionedAssets.V4([
             {
-              id: XcmV3MultiassetAssetId.Concrete(rocInWndAh),
+              id: rocInWndAh,
               fun: XcmV3MultiassetFungibility.Fungible(amount),
             },
           ]),
