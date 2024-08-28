@@ -10,7 +10,7 @@ import {
   dotAh,
 } from "@polkadot-api/descriptors"
 import { Binary, Enum, SS58String } from "polkadot-api"
-import { map } from "rxjs"
+import { combineLatest, from, map } from "rxjs"
 
 const encodeAccount = AccountId().enc
 
@@ -90,20 +90,34 @@ export const fromAssetHubToForeign = (
 
 type GenericApi = TypedApi<typeof dotAh>
 
-export const watchAccoutFreeBalance =
-  (api: {
-    query: {
-      System: {
-        Account: {
-          watchValue: GenericApi["query"]["System"]["Account"]["watchValue"]
-        }
+export const watchAccoutFreeBalance = (api: {
+  constants: {
+    Balances: {
+      ExistentialDeposit: () => Promise<bigint>
+    }
+  }
+  query: {
+    System: {
+      Account: {
+        watchValue: GenericApi["query"]["System"]["Account"]["watchValue"]
       }
     }
-  }) =>
-  (account: SS58String) =>
-    api.query.System.Account.watchValue(account, "best").pipe(
-      map(({ data }) => data.free - data.frozen),
+  }
+}) => {
+  const edPromise = api.constants.Balances.ExistentialDeposit()
+  return (account: SS58String) =>
+    combineLatest([
+      from(edPromise),
+      api.query.System.Account.watchValue(account, "best"),
+    ]).pipe(
+      map(([ed, { data }]) => {
+        const spendableBalance =
+          data.free -
+          (data.frozen - data.reserved > ed ? data.frozen - data.reserved : ed)
+        return spendableBalance > 0n ? spendableBalance : 0n
+      }),
     )
+}
 
 export const watchForeingAssetAccoutFreeBalance =
   (
