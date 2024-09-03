@@ -25,9 +25,9 @@ const wnd: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
     wnd: (...args) =>
-      api.tx.PolkadotXcm.limited_teleport_assets(fromAssetHubToRelay(...args)),
+      api.tx.PolkadotXcm.transfer_assets(fromAssetHubToRelay(...args)),
     rocAh: (from, amount, to) =>
-      api.tx.PolkadotXcm.limited_reserve_transfer_assets(
+      api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(
           XcmV3JunctionNetworkId.Rococo(),
           1000,
@@ -52,7 +52,7 @@ const roc: AssetInChain = {
   watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, rocInWndAh),
   teleport: {
     rocAh: (from, amount, to) =>
-      api.tx.PolkadotXcm.limited_reserve_transfer_assets(
+      api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(
           XcmV3JunctionNetworkId.Rococo(),
           1000,

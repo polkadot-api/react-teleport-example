@@ -23,9 +23,9 @@ const ksm: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
     ksm: (...args) =>
-      api.tx.PolkadotXcm.limited_teleport_assets(fromAssetHubToRelay(...args)),
+      api.tx.PolkadotXcm.transfer_assets(fromAssetHubToRelay(...args)),
     dotAh: (from, amount, to) =>
-      api.tx.PolkadotXcm.limited_reserve_transfer_assets(
+      api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(
           XcmV3JunctionNetworkId.Polkadot(),
           1000,
