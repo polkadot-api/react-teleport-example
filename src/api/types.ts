@@ -8,11 +8,9 @@ export type ChainId =
   | "wndAh"
   | "ksm"
   | "ksmAh"
-  | "roc"
-  | "rocAh"
   | "pas"
   | "pasAh"
-export type AssetId = "DOT" | "KSM" | "WND" | "ROC" | "PAS"
+export type AssetId = "DOT" | "KSM" | "WND" | "PAS"
 
 export type TeleportAsset = (
   from: PolkadotSigner,

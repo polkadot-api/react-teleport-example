@@ -26,14 +26,6 @@
       "wsUrl": "wss://kusama-asset-hub-rpc.polkadot.io",
       "metadata": ".papi/metadata/ksmAh.scale"
     },
-    "roc": {
-      "chain": "rococo_v2_2",
-      "metadata": ".papi/metadata/roc.scale"
-    },
-    "rocAh": {
-      "wsUrl": "wss://asset-hub-rococo-rpc.dwellir.com",
-      "metadata": ".papi/metadata/rocAh.scale"
-    },
     "pas": {
       "chain": "paseo",
       "metadata": ".papi/metadata/pas.scale"
