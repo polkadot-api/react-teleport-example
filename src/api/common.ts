@@ -1,7 +1,5 @@
 import { AccountId, PolkadotSigner, TypedApi } from "polkadot-api"
 import {
-  DotAhCalls,
-  DotCalls,
   XcmV3Junction,
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
@@ -16,9 +14,7 @@ import { combineLatest, from, map } from "rxjs"
 
 const encodeAccount = AccountId().enc
 
-export const getBeneficiary = (
-  address: SS58String | Uint8Array,
-): XcmVersionedLocation =>
+export const getBeneficiary = (address: SS58String | Uint8Array) =>
   XcmVersionedLocation.V4({
     parents: 0,
     interior: XcmV3Junctions.X1(
@@ -31,10 +27,7 @@ export const getBeneficiary = (
     ),
   })
 
-export const getNativeAsset = (
-  parents: number,
-  amount: bigint,
-): XcmVersionedAssets =>
+export const getNativeAsset = (parents: number, amount: bigint) =>
   XcmVersionedAssets.V4([
     {
       id: {
@@ -49,7 +42,7 @@ export const fromRelayToAssetHub = (
   from: PolkadotSigner,
   amount: bigint,
   to?: SS58String,
-): DotCalls["XcmPallet"]["transfer_assets"] => ({
+) => ({
   dest: XcmVersionedLocation.V4({
     parents: 0,
     interior: XcmV3Junctions.X1(XcmV3Junction.Parachain(1000)),
@@ -64,7 +57,7 @@ export const fromAssetHubToRelay = (
   from: PolkadotSigner,
   amount: bigint,
   to?: SS58String,
-): DotAhCalls["PolkadotXcm"]["transfer_assets"] => ({
+) => ({
   dest: XcmVersionedLocation.V4({
     parents: 1,
     interior: XcmV3Junctions.Here(),
@@ -81,7 +74,7 @@ export const fromAssetHubToForeign = (
   assets: XcmVersionedAssets,
   from: PolkadotSigner,
   to?: SS58String,
-): DotAhCalls["PolkadotXcm"]["transfer_assets"] => ({
+) => ({
   dest: XcmVersionedLocation.V4({
     parents: 2,
     interior: XcmV3Junctions.X2([
