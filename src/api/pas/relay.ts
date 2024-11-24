@@ -11,7 +11,7 @@ const pas: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
     pasAh: (...args) =>
-      api.tx.XcmPallet.limited_teleport_assets(fromRelayToAssetHub(...args)),
+      api.tx.XcmPallet.transfer_assets(fromRelayToAssetHub(...args)),
   },
 }
 

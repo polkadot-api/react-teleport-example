@@ -11,9 +11,9 @@ const ksm: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
     ksmAh: (...args) =>
-      api.tx.XcmPallet.limited_teleport_assets(fromRelayToAssetHub(...args)),
+      api.tx.XcmPallet.transfer_assets(fromRelayToAssetHub(...args)),
     ksmEnc: (...args) =>
-      api.tx.XcmPallet.limited_teleport_assets(fromRelayToEncointer(...args)),
+      api.tx.XcmPallet.transfer_assets(fromRelayToEncointer(...args)),
   },
 }
 

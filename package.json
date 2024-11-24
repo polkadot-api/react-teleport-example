@@ -12,37 +12,37 @@
   },
   "dependencies": {
     "@polkadot-api/descriptors": "file:.papi/descriptors",
-    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
-    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
-    "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.436.0",
-    "polkadot-api": "^1.0.2",
+    "lucide-react": "^0.456.0",
+    "polkadot-api": "^1.7.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rxjs": "^7.8.1",
-    "tailwind-merge": "^2.5.2",
+    "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^22.5.0",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.41",
+    "postcss": "^8.4.49",
     "prettier": "^3.3.3",
-    "tailwindcss": "^3.4.10",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.2"
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
   },
   "prettier": {
     "printWidth": 80,
     "semi": false,
     "trailingComma": "all"
   },
-  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
+  "packageManager": "pnpm@9.13.0+sha512.beb9e2a803db336c10c9af682b58ad7181ca0fbd0d4119f2b33d5f2582e96d6c0d93c85b23869295b765170fbdaa92890c0da6ada457415039769edf3c959efe"
 }
