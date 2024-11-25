@@ -36,6 +36,7 @@
     },
     "ksmEnc": {
       "chain": "ksmcc3_encointer",
+      "wsUrl": "wss://kusama.api.encointer.org",
       "metadata": ".papi/metadata/ksmEnc.scale"
     }
   }
