@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button"
 import { useSelectedAccount } from "@/context"
 import { PolkadotSigner, Transaction } from "polkadot-api"
 import React, {
-  MutableRefObject,
   PropsWithChildren,
+  RefObject,
   useEffect,
   useRef,
   useState,
@@ -22,7 +22,7 @@ import { cn, formatCurrency } from "@/lib/utils"
 const SubmitDialog: React.FC<
   PropsWithChildren<{
     signer: PolkadotSigner
-    signSubmitAndWatch: MutableRefObject<
+    signSubmitAndWatch: RefObject<
       Transaction<any, any, any, any>["signSubmitAndWatch"] | undefined
     >
   }>
@@ -115,7 +115,7 @@ export const FeesAndSubmit: React.FC<{
   const account = useSelectedAccount()
   const [fees, setFees] = useState<bigint | null>()
   const signSubmitAndWatch =
-    useRef<Transaction<any, any, any, any>["signSubmitAndWatch"]>()
+    useRef<Transaction<any, any, any, any>["signSubmitAndWatch"]>(undefined)
 
   const fixedAmount =
     amount !== null ? BigInt(amount * 10 ** ASSET_DECIMALS[asset]) : null
