@@ -1,5 +1,6 @@
 import { AccountId, PolkadotSigner, TypedApi } from "polkadot-api"
 import {
+  DotXcmVersionedAssets,
   XcmV3Junction,
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
@@ -71,7 +72,7 @@ export const fromAssetHubToRelay = (
 export const fromAssetHubToForeign = (
   network: XcmV3JunctionNetworkId,
   parachainId: number,
-  assets: XcmVersionedAssets,
+  assets: DotXcmVersionedAssets,
   from: PolkadotSigner,
   to?: SS58String,
 ) => ({
