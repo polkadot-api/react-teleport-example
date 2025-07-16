@@ -42,10 +42,17 @@ export const fromRelayToAssetHub = (
   from: PolkadotSigner,
   amount: bigint,
   to?: SS58String,
+) => fromRelayToParachain(1000, from, amount, to)
+
+export const fromRelayToParachain = (
+  paraId: number,
+  from: PolkadotSigner,
+  amount: bigint,
+  to?: SS58String,
 ) => ({
   dest: XcmVersionedLocation.V4({
     parents: 0,
-    interior: XcmV3Junctions.X1(XcmV3Junction.Parachain(1000)),
+    interior: XcmV3Junctions.X1(XcmV3Junction.Parachain(paraId)),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets: getNativeAsset(0, amount),

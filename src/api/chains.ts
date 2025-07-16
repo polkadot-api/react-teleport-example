@@ -31,4 +31,5 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   wndAh: "Westend AssetHub",
   pas: "Paseo RelayChain",
   pasAh: "Paseo AssetHub",
+  passet: "PAsset Hub",
 }

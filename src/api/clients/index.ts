@@ -8,4 +8,5 @@ export { wndClient } from "./wnd"
 export { wndAhClient } from "./wndAh"
 
 export { pasClient } from "./pas"
+export { passetClient } from "./passet"
 export { pasAhClient } from "./pasAh"

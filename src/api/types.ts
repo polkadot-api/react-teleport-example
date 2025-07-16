@@ -10,6 +10,7 @@ export type ChainId =
   | "ksmAh"
   | "pas"
   | "pasAh"
+  | "passet"
 export type AssetId = "DOT" | "KSM" | "WND" | "PAS"
 
 export type TeleportAsset = (
