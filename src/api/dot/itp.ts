@@ -16,7 +16,7 @@ const teerP: AssetInChain = {
   symbol: "TEER",
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
-    ksmAh: (from, amount, to) =>
+    dotAh: (from, amount, to) =>
       api.tx.PolkadotXcm.transfer_assets(
         fromSystemToSibling(
           1000,

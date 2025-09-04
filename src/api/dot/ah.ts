@@ -69,4 +69,18 @@ const ksm: AssetInChain = {
   },
 }
 
-export default [dot, ksm]
+const teerInDotAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
+  parents: 1,
+  interior: XcmV3Junctions.X1(
+    XcmV3Junction.Parachain(2039),
+  ),
+}
+
+const teer: AssetInChain = {
+  chain: "dotAh",
+  symbol: "TEER",
+  watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, teerInDotAh),
+  teleport: {},
+}
+
+export default [dot, ksm, teer]

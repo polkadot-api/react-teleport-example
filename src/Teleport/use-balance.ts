@@ -8,7 +8,8 @@ export const useBalance = (chain: ChainId, asset: AssetId) => {
 
   useEffect(() => {
     setBalance(null)
-
+    console.log(`chains(${chain}): `, chains.get(chain))
+    console.log(`chains(${chain}, ${asset}): `, chains.get(chain).get(asset))
     const subscription = chains
       .get(chain)!
       .get(asset)!

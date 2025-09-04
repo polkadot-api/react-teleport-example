@@ -2,12 +2,10 @@ import dot from "./dot"
 import ksm from "./ksm"
 import wnd from "./wnd"
 import pas from "./pas"
-import itk from "./ksm/itk.ts"
-import itp from "./dot/itp.ts"
 
 import { AssetId, AssetInChain, ChainId } from "./types"
 
-const assetsInChains = [...dot, ...ksm, ...wnd, ...pas, ...itk, ...itp]
+const assetsInChains = [...dot, ...ksm, ...wnd, ...pas]
 
 export const chains = new Map<ChainId, Map<AssetId, AssetInChain>>()
 

@@ -16,7 +16,10 @@ import {
 } from "../common"
 
 const api = ksmAhClient.getTypedApi(ksmAh)
-
+const ed = api.constants.Balances.ExistentialDeposit()
+console.log("KAH ed", ed.toString())
+const myfn = watchAccoutFreeBalance(api)
+console.log("KAH myfn", myfn)
 const ksm: AssetInChain = {
   chain: "ksmAh",
   symbol: "KSM",
@@ -78,4 +81,36 @@ const dot: AssetInChain = {
   },
 }
 
-export default [dot, ksm]
+const teerInKsmAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
+  parents: 1,
+  interior: XcmV3Junctions.X1(
+    XcmV3Junction.Parachain(2015),
+  ),
+}
+
+const teer: AssetInChain = {
+  chain: "ksmAh",
+  symbol: "TEER",
+  watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, teerInKsmAh),
+  teleport: {
+    /*
+    dotAh: (from, amount, to) =>
+      api.tx.PolkadotXcm.limited_reserve_transfer_assets(
+        fromAssetHubToForeign(
+          XcmV4JunctionNetworkId.Polkadot(),
+          1000,
+          XcmVersionedAssets.V4([
+            {
+              id: teerInKsmAh,
+              fun: XcmV3MultiassetFungibility.Fungible(amount),
+            },
+          ]),
+          from,
+          to,
+        ),
+      ),
+    */
+  },
+}
+
+export default [dot, ksm, teer]
