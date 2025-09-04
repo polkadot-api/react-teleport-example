@@ -4,40 +4,76 @@
   "entries": {
     "wnd": {
       "chain": "westend2",
-      "metadata": ".papi/metadata/wnd.scale"
+      "metadata": ".papi/metadata/wnd.scale",
+      "genesis": "0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e",
+      "codeHash": "0x042cc8527e4b901f1f11b7e32ad9462ce5a1443947119c85c235d1887492519b"
     },
     "wndAssethub": {
       "wsUrl": "wss://westend-asset-hub-rpc.polkadot.io",
-      "metadata": ".papi/metadata/wndAssethub.scale"
+      "metadata": ".papi/metadata/wndAssethub.scale",
+      "genesis": "0x67f9723393ef76214df0118c34bbbd3dbebc8ed46a10973a8c969d48fe7598c9",
+      "codeHash": "0x32f20119c34bc0bf270e9c43bd6d4e9ae3dcbaaaf8e1bb4cd49c79dea58a7efe"
     },
     "dot": {
       "chain": "polkadot",
-      "metadata": ".papi/metadata/dot.scale"
+      "metadata": ".papi/metadata/dot.scale",
+      "genesis": "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3",
+      "codeHash": "0xe260d17fcfa34f10503c91148a7bc2fd820e356295d2e18f828b5fa4190d47f7"
     },
     "ksm": {
       "chain": "ksmcc3",
-      "metadata": ".papi/metadata/ksm.scale"
+      "metadata": ".papi/metadata/ksm.scale",
+      "genesis": "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe",
+      "codeHash": "0x4c843d1c1b5ce542fcc0e9cc1439ad3384e5753da24d2747c4aa24162a202449"
     },
     "dotAh": {
       "wsUrl": "wss://polkadot-asset-hub-rpc.polkadot.io",
-      "metadata": ".papi/metadata/dotAh.scale"
+      "metadata": ".papi/metadata/dotAh.scale",
+      "genesis": "0x68d56f15f85d3136970ec16946040bc1752654e906147f7e43e9d539d7c3de2f",
+      "codeHash": "0x8cada8f706ffc7c9bd0c31985ec4f34520914778edefaa94b624bc6adea48a1c"
     },
     "ksmAh": {
       "wsUrl": "wss://kusama-asset-hub-rpc.polkadot.io",
-      "metadata": ".papi/metadata/ksmAh.scale"
+      "metadata": ".papi/metadata/ksmAh.scale",
+      "genesis": "0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a",
+      "codeHash": "0xc614bece9b065c25a8a4939343bf4171104d348a82caa987f1ce5829dd9f997e"
     },
     "pas": {
       "chain": "paseo",
-      "metadata": ".papi/metadata/pas.scale"
+      "metadata": ".papi/metadata/pas.scale",
+      "genesis": "0x77afd6190f1554ad45fd0d31aee62aacc33c6db0ea801129acb813f913e0764f",
+      "codeHash": "0x96f6cb4f577e7ecb8c9e648f77724c0c850fe366854f99a29c79275895b4c636"
     },
     "pasAh": {
       "chain": "paseo_asset_hub",
-      "metadata": ".papi/metadata/pasAh.scale"
+      "metadata": ".papi/metadata/pasAh.scale",
+      "genesis": "0xd6eec26135305a8ad257a20d003357284c8aa03d0bdb2b357ab0a22371e11ef2",
+      "codeHash": "0x6b99330eb07c2dfd4510609ae8c49d9a2732f9bef8b9c0da544828f4e1a34942"
     },
     "ksmEnc": {
       "chain": "ksmcc3_encointer",
       "wsUrl": "wss://kusama.api.encointer.org",
-      "metadata": ".papi/metadata/ksmEnc.scale"
+      "metadata": ".papi/metadata/ksmEnc.scale",
+      "genesis": "0x7dd99936c1e9e6d1ce7d90eb6f33bea8393b4bf87677d675aa63c9cb3e8c5b5b",
+      "codeHash": "0x6a1faad9888624da0ec673c6e992312bf6f7bf40ef95d796ee072a3367f87021"
+    },
+    "itp": {
+      "wsUrl": "wss://polkadot.api.integritee.network",
+      "metadata": ".papi/metadata/itp.scale",
+      "genesis": "0xe13e7af377c64e83f95e0d70d5e5c3c01d697a84538776c5b9bbe0e7d7b6034c",
+      "codeHash": "0xbbe251db4a91d89eb85077566e857e0e301f7e9a9822a47a999de0d5b4560fe5"
+    },
+    "itk": {
+      "wsUrl": "ws://localhost:8001",
+      "metadata": ".papi/metadata/itk.scale",
+      "genesis": "0xcdedc8eadbfa209d3f207bba541e57c3c58a667b05a2e1d1e86353c9000758da",
+      "codeHash": "0x9e04dba919d4bdfcd328563e5ff6f2d1b2d5492599037fcb2e94a12131181236"
+    },
+    "passet": {
+      "wsUrl": "wss://testnet-passet-hub.polkadot.io",
+      "metadata": ".papi/metadata/passet.scale",
+      "genesis": "0xfd974cf9eaf028f5e44b9fdd1949ab039c6cf9cc54449b0b60d71b042e79aeb6",
+      "codeHash": "0x87d8a4f006f8d55b05a81e32c8594acabb4f95dbeae1b724edc9ecf2289dc7af"
     }
   }
 }

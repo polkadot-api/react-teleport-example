@@ -12,7 +12,9 @@ export type ChainId =
   | "pas"
   | "pasAh"
   | "passet"
-export type AssetId = "DOT" | "KSM" | "WND" | "PAS"
+  | "itk"
+  | "itp"
+export type AssetId = "DOT" | "KSM" | "WND" | "PAS" | "TEER"
 
 export type TeleportAsset = (
   from: PolkadotSigner,
