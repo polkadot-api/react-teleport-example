@@ -27,6 +27,7 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   dotAh: "Polkadot AssetHub",
   ksm: "Kusama RelayChain",
   ksmAh: "Kusama AssetHub",
+  ksmEnc: "Kusama Encointer",
   wnd: "Westend RelayChain",
   wndAh: "Westend AssetHub",
   pas: "Paseo RelayChain",
