@@ -9,8 +9,6 @@ export type ChainId =
   | "ksm"
   | "ksmAh"
   | "ksmEnc"
-  | "roc"
-  | "rocAh"
   | "pas"
   | "pasAh"
   | "passet"

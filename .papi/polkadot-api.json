@@ -55,6 +55,12 @@
       "metadata": ".papi/metadata/passet.scale",
       "genesis": "0xfd974cf9eaf028f5e44b9fdd1949ab039c6cf9cc54449b0b60d71b042e79aeb6",
       "codeHash": "0x87d8a4f006f8d55b05a81e32c8594acabb4f95dbeae1b724edc9ecf2289dc7af"
+    },
+    "ksmEnc": {
+      "wsUrl": "wss://kusama.api.encointer.org",
+      "metadata": ".papi/metadata/ksmEnc.scale",
+      "genesis": "0x7dd99936c1e9e6d1ce7d90eb6f33bea8393b4bf87677d675aa63c9cb3e8c5b5b",
+      "codeHash": "0x6a1faad9888624da0ec673c6e992312bf6f7bf40ef95d796ee072a3367f87021"
     }
   }
 }
