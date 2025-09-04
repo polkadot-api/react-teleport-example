@@ -1,11 +1,10 @@
 import {
-  XcmV3JunctionNetworkId,
   ksmEnc,
 } from "@polkadot-api/descriptors"
 import { ksmEncClient } from "@/api/clients"
 import { AssetInChain } from "../types"
 import {
-  fromEncointerToForeign,
+  fromSystemToSibling,
   fromEncointerToRelay,
   getNativeAsset,
   watchAccoutFreeBalance,
@@ -19,11 +18,10 @@ const ksm: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
     ksm: (...args) =>
-      api.tx.PolkadotXcm.transfer_assets(fromEncointerToRelay(...args)),
-    dotAh: (from, amount, to) =>
-      api.tx.PolkadotXcm.transfer_assets(
-        fromEncointerToForeign(
-          XcmV3JunctionNetworkId.Polkadot(),
+      api.tx.PolkadotXcm.limited_teleport_assets(fromEncointerToRelay(...args)),
+    ksmAh: (from, amount, to) =>
+      api.tx.PolkadotXcm.limited_teleport_assets(
+        fromSystemToSibling(
           1000,
           getNativeAsset(1, amount),
           from,
