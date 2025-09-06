@@ -1,7 +1,7 @@
 import {
-  XcmV3Junction,
-  XcmV3JunctionNetworkId,
-  XcmV3Junctions,
+  XcmV5Junction,
+  XcmV5Junctions,
+  XcmV5NetworkId,
   XcmVersionedLocation,
   ksmAh,
 } from "@polkadot-api/descriptors"
@@ -27,7 +27,7 @@ const ksm: AssetInChain = {
     dotAh: (from, amount, to) =>
       api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(
-          XcmV3JunctionNetworkId.Polkadot(),
+          XcmV5NetworkId.Polkadot(),
           1000,
           getNativeAsset(1, amount),
           from,
@@ -37,10 +37,10 @@ const ksm: AssetInChain = {
   },
 }
 
-const dotInKsmAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
+const dotInKsmAh: Parameters<typeof XcmVersionedLocation.V5>[0] = {
   parents: 2,
-  interior: XcmV3Junctions.X1(
-    XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Polkadot()),
+  interior: XcmV5Junctions.X1(
+    XcmV5Junction.GlobalConsensus(XcmV5NetworkId.Polkadot()),
   ),
 }
 
