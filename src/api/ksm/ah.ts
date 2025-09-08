@@ -3,6 +3,8 @@ import {
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
   XcmVersionedLocation,
+  XcmVersionedAssets,
+  XcmV3MultiassetFungibility,
   ksmAh,
 } from "@polkadot-api/descriptors"
 import { ksmAhClient } from "@/api/clients"
@@ -93,6 +95,20 @@ const teer: AssetInChain = {
   symbol: "TEER",
   watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, teerInKsmAh),
   teleport: {
+    itk: (from, amount, to) =>
+      api.tx.PolkadotXcm.transfer_assets(
+        fromSystemToSibling(
+          2015,
+          XcmVersionedAssets.V4([
+            {
+              id: teerInKsmAh,
+              fun: XcmV3MultiassetFungibility.Fungible(amount),
+            },
+          ]),
+          from,
+          to,
+        ),
+      ),
     /*
     dotAh: (from, amount, to) =>
       api.tx.PolkadotXcm.limited_reserve_transfer_assets(

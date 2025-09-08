@@ -3,6 +3,8 @@ import {
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
   XcmVersionedLocation,
+  XcmVersionedAssets,
+  XcmV3MultiassetFungibility,
   dotAh,
 } from "@polkadot-api/descriptors"
 import { dotAhClient } from "@/api/clients"
@@ -12,7 +14,7 @@ import {
   fromAssetHubToForeign,
   getNativeAsset,
   watchAccoutFreeBalance,
-  watchForeingAssetAccoutFreeBalance,
+  watchForeingAssetAccoutFreeBalance, fromSystemToSibling,
 } from "../common"
 
 const api = dotAhClient.getTypedApi(dotAh)
@@ -80,7 +82,22 @@ const teer: AssetInChain = {
   chain: "dotAh",
   symbol: "TEER",
   watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, teerInDotAh),
-  teleport: {},
+  teleport: {
+    itp: (from, amount, to) =>
+      api.tx.PolkadotXcm.transfer_assets(
+        fromSystemToSibling(
+          2039,
+          XcmVersionedAssets.V4([
+            {
+              id: teerInDotAh,
+              fun: XcmV3MultiassetFungibility.Fungible(amount),
+            },
+          ]),
+          from,
+          to,
+        ),
+      ),
+  },
 }
 
 export default [dot, ksm, teer]
