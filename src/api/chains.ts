@@ -21,7 +21,10 @@ export const ASSET_DECIMALS: Record<AssetId, number> = {
   KSM: 12,
   WND: 12,
   PAS: 10,
-  TEER: 12
+  TEER: 12,
+  // hack to specify specific native asset on each side. It's all TEER ,actually
+  ITP: 12,
+  ITK: 12
 }
 
 export const CHAIN_NAMES: Record<ChainId, string> = {

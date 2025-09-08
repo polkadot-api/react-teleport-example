@@ -6,7 +6,6 @@ export const FormattedToken: React.FC<{
   value: bigint | null
 }> = ({ asset, value }) => {
   const decimals = ASSET_DECIMALS[asset]
-
   return (
     <>
       {value === null
