@@ -1,5 +1,5 @@
 import {
-  itp
+  itp, XcmV3Junctions, XcmVersionedLocation, XcmV3Junction
 } from "@polkadot-api/descriptors"
 import { itpClient } from "@/api/clients"
 import { AssetInChain } from "../types.ts"
@@ -25,6 +25,20 @@ const teerP: AssetInChain = {
           to,
         ),
       ),
+    itk: (from, amount, _to) =>
+      api.tx.Porteer.port_tokens({
+        amount: amount,
+      }),
+    ksmAh: (from, amount, _to) =>
+      api.tx.Porteer.port_tokens({
+        amount: amount,
+        forward_tokens_to_location: {
+          parents: 1,
+          interior: XcmV3Junctions.X1(
+            XcmV3Junction.Parachain(1000),
+          ),
+        }
+      }),
   },
 }
 
