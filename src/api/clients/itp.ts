@@ -4,5 +4,6 @@ import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat";
 
 
 export const itpClient = createClient(withPolkadotSdkCompat(
-  getWsProvider("wss://polkadot.api.integritee.network")
+  //getWsProvider("wss://polkadot.api.integritee.network")
+  getWsProvider("ws://localhost:8003")
 ))

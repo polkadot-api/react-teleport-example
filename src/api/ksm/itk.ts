@@ -20,7 +20,7 @@ const teerK: AssetInChain = {
       api.tx.PolkadotXcm.transfer_assets(
         fromSystemToSibling(
           1000,
-          getNativeAsset(1, amount),
+          getNativeAsset(0, amount),
           from,
           to,
         ),

@@ -2,6 +2,8 @@ import { createClient } from "polkadot-api"
 import { getSmProvider } from "polkadot-api/sm-provider"
 import { smoldot } from "./smoldot"
 import { ksmRelayChain } from "./ksm"
+import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat"
+import { getWsProvider } from "polkadot-api/ws-provider/web";
 
 const smoldotParaChain = Promise.all([
   ksmRelayChain,
@@ -10,4 +12,8 @@ const smoldotParaChain = Promise.all([
   smoldot.addChain({ chainSpec, potentialRelayChains: [relayChain] }),
 )
 
-export const ksmAhClient = createClient(getSmProvider(smoldotParaChain))
+// export const ksmAhClient = createClient(getSmProvider(smoldotParaChain))
+
+export const ksmAhClient = createClient(withPolkadotSdkCompat(
+  getWsProvider("ws://localhost:8000")
+))
