@@ -101,8 +101,12 @@ export const Teleport: React.FC = () => {
   )
   const [amount, setAmount] = useState<number | null>(null)
   const fromBalance = useBalance(from, asset.selected)
-  const usePorteer = ((from === "itk" && to.selected === "itp") ||
-    (from === "itp" && to.selected === "itk") && asset.selected === "TEER");
+  const usePorteer = (asset.selected === "TEER"
+    && (from === "itk" && to.selected === "itp")
+    || (from === "itp" && to.selected === "itk")
+    || (from === "itk" && to.selected === "dotAh")
+    || (from === "itp" && to.selected === "ksmAh")
+  );
   console.log("usePorteer: ", usePorteer);
   const sourcePorteerStatus = usePorteerStatus(from, asset.selected);
   const destinationPorteerStatus = usePorteerStatus(to.selected, asset.selected);
@@ -178,7 +182,7 @@ export const Teleport: React.FC = () => {
       {(usePorteer && sourcePorteerStatus != null) && (
         <Card className="w-full max-w-sm">
           <CardHeader className="m-0 p-2 text-center">
-            Porteer Status
+            TEER Bridge Status
           </CardHeader>
           <div>
             Last heartbeat: { formatTimeAgo(sourcePorteerStatus.heartbeat, now) }
@@ -195,7 +199,7 @@ export const Teleport: React.FC = () => {
             </div>
           )}
           <div>
-            Bridge fee: { Number(sourcePorteerStatus?.fees.local_equivalent_sum * 1000n / 10n ** BigInt(ASSET_DECIMALS[asset.selected]))/1000 } TEER
+            extra bridge fee: { Number(sourcePorteerStatus?.fees.local_equivalent_sum * 1000n / 10n ** BigInt(ASSET_DECIMALS[asset.selected]))/1000 } TEER
           </div>
         </Card>
       )}
@@ -217,6 +221,7 @@ export const Teleport: React.FC = () => {
         to={to.selected}
         asset={asset.selected}
         amount={amount}
+        bridgeFee={usePorteer ? sourcePorteerStatus?.fees.local_equivalent_sum : 0n}
         disabled={!bridgeEnabled || heartbeatStale}
       />
     </>

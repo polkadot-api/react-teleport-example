@@ -9,7 +9,7 @@ export default function LoginForm() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl text-center">
-            PAPI Teleporter
+            TEER CrossChain Tool
           </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">

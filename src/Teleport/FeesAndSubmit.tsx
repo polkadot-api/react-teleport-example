@@ -113,8 +113,9 @@ export const FeesAndSubmit: React.FC<{
   to: ChainId
   asset: AssetId
   amount: number | null
+  bridgeFee?: bigint | null
   disabled?: boolean
-}> = ({ from, to, asset, amount, disabled }) => {
+}> = ({ from, to, asset, amount, bridgeFee, disabled }) => {
   const account = useSelectedAccount()
   const [fees, setFees] = useState<bigint | null>()
   const signSubmitAndWatch =
@@ -135,7 +136,7 @@ export const FeesAndSubmit: React.FC<{
 
       signSubmitAndWatch.current = call.signSubmitAndWatch
       call.getEstimatedFees(account.address).then((fees) => {
-        if (token) setFees(fees)
+        if (token) setFees(fees + (bridgeFee ? bridgeFee : 0n) )
       })
     }, 50)
 
@@ -161,7 +162,7 @@ export const FeesAndSubmit: React.FC<{
           <span>
             {fees ? (
               <FormattedToken
-                asset={from.slice(0, 3).toUpperCase() as AssetId}
+                asset={asset}
                 value={fees}
               />
             ) : (
