@@ -85,10 +85,10 @@ export const Teleport: React.FC = () => {
   const fromBalance = useBalance(from, asset.selected)
   const usePorteer = ((from === "itk" && to.selected === "itp") ||
     (from === "itp" && to.selected === "itk") && asset.selected === "TEER");
-  const fromPorteerHeartbeat = usePorteer
-    ? usePorteerStatus(from)
-    : undefined
+  console.log("usePorteer: ", usePorteer);
+  const sourcePorteerStatus = usePorteerStatus(from, asset.selected);
 
+  console.log("sourcePorteerStatus: ", sourcePorteerStatus);
   return (
     <>
       <div className="flex flex-col space-y-1.5">
@@ -148,11 +148,14 @@ export const Teleport: React.FC = () => {
           </li>
         </ul>
       </Card>
-      {usePorteer && (
+      {(usePorteer && sourcePorteerStatus != null) && (
         <Card className="w-full max-w-sm">
           <CardHeader className="m-0 p-2 text-center">
             Porteer Status
           </CardHeader>
+          <div>
+            { sourcePorteerStatus.heartbeat }
+          </div>
         </Card>
       )}
       <div className="grid w-full max-w-sm items-center gap-1.5">

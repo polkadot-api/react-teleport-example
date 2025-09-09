@@ -1,7 +1,7 @@
-import { ChainId, chains } from "@/api"
+import { AssetId, ChainId, chains } from "@/api"
 import { useEffect, useState } from "react"
 import { PorteerStatus } from "@/api/types.ts"
-export const usePorteerStatus = (chain: ChainId) => {
+export const usePorteerStatus = (chain: ChainId, asset: AssetId) => {
   const [status, setStatus] = useState<PorteerStatus | null>(null)
   console.log("status step 0: ", chain)
   useEffect(() => {
@@ -24,7 +24,7 @@ export const usePorteerStatus = (chain: ChainId) => {
     const subscription = watchPorteerStatus().subscribe(setStatus)
     console.log("status step 5: ", chain)
     return () => subscription.unsubscribe()
-  }, [chain])
+  }, [chain, asset])
 
   return status
 }
