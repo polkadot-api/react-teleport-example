@@ -17,20 +17,6 @@ const teerK: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   watchPorteerStatus: watchPorteerStatus(api),
   teleport: {
-    ksmAh: (from, amount, to) =>
-      api.tx.PolkadotXcm.transfer_assets(
-        fromSystemToSibling(
-          1000,
-          getNativeAsset(0, amount),
-          from,
-          to,
-        ),
-      ),
-    itp: (_from, amount, _to) =>
-      api.tx.Porteer.port_tokens({
-        amount: amount,
-        forward_tokens_to_location: undefined
-      }),
     dotAh: (_from, amount, _to) =>
       api.tx.Porteer.port_tokens({
         amount: amount,
@@ -41,6 +27,20 @@ const teerK: AssetInChain = {
           ),
         }
       }),
+    itp: (_from, amount, _to) =>
+      api.tx.Porteer.port_tokens({
+        amount: amount,
+        forward_tokens_to_location: undefined
+      }),
+    ksmAh: (from, amount, to) =>
+      api.tx.PolkadotXcm.transfer_assets(
+        fromSystemToSibling(
+          1000,
+          getNativeAsset(0, amount),
+          from,
+          to,
+        ),
+      ),
   },
 }
 

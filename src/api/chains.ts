@@ -32,7 +32,7 @@ export const ASSET_DECIMALS: Record<AssetId, number> = {
 
 export const CHAIN_NAMES: Record<ChainId, string> = {
   dot: "Polkadot RelayChain",
-  dotAh: "Polkadot AssetHub",
+  dotAh: "Polkadot AssetHub (GW to Ethereum)",
   ksm: "Kusama RelayChain",
   ksmAh: "Kusama AssetHub",
   ksmEnc: "Kusama Encointer",

@@ -103,4 +103,4 @@ const teer: AssetInChain = {
   },
 }
 
-export default [dot, ksm, teer]
+export default [teer, dot, ksm]

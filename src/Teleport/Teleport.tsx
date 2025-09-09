@@ -91,7 +91,7 @@ function formatTimeAgo(epoch: bigint, now: number): string {
 
 function isPorteerHeartbeatStale(epoch: bigint): boolean {
   const now = Date.now();
-  return now - Number(epoch) > 995 * 60 * 1000; // 30 minutes in ms
+  return now - Number(epoch) > 28 * 60 * 1000; // minutes in ms
 }
 
 export const Teleport: React.FC = () => {
@@ -107,8 +107,9 @@ export const Teleport: React.FC = () => {
     || (from === "itk" && to.selected === "dotAh")
     || (from === "itp" && to.selected === "ksmAh")
   );
+  const otherPorteer = usePorteer ? (from === "itk" ? "itp" : "itk") : "itk";
   const sourcePorteerStatus = usePorteerStatus(from, asset.selected);
-  const destinationPorteerStatus = usePorteerStatus(to.selected, asset.selected);
+  const destinationPorteerStatus = usePorteerStatus(otherPorteer, asset.selected);
   const heartbeatStale = !!(usePorteer && sourcePorteerStatus?.heartbeat && isPorteerHeartbeatStale(sourcePorteerStatus.heartbeat));
   const bridgeEnabled = !!(usePorteer && sourcePorteerStatus?.config.send_enabled && destinationPorteerStatus?.config.receive_enabled);
 
@@ -223,7 +224,7 @@ export const Teleport: React.FC = () => {
         asset={asset.selected}
         amount={amount}
         bridgeFee={usePorteer ? sourcePorteerStatus?.fees.local_equivalent_sum : 0n}
-        disabled={!bridgeEnabled || heartbeatStale}
+        disabled={usePorteer && (!bridgeEnabled || heartbeatStale)}
       />
     </>
   )

@@ -35,7 +35,7 @@ const SubmitDialog: React.FC<
       <DialogTrigger>
         <Button
           onClick={() => {
-            setDialogText("Wating for the transaction to be signed")
+            setDialogText("Waiting for the transaction to be signed")
             setOpenDialog(true)
             signSubmitAndWatch.current!(signer).subscribe({
               next: (e) => {
@@ -52,13 +52,9 @@ const SubmitDialog: React.FC<
                   }
                   case "txBestBlocksState": {
                     e.found
-                      ? setDialogText(
-                          `The transaction was found in a best block (${e.block.hash}[${e.block.index}]), ${
-                            e.ok
-                              ? "and it's being successful! 🎉"
-                              : "but it's failing... 😞"
-                          }`,
-                        )
+                      ? e.ok
+                        ? setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), and it's being successful! 🎉`)
+                        : setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), but it's failing... 😞`)
                       : e.isValid
                         ? setDialogText(
                             "The transaction has been validated and broadcasted",
@@ -85,7 +81,7 @@ const SubmitDialog: React.FC<
                 }
               },
               error: (e) => {
-                setDialogText("An error ocurred, please try again later.")
+                setDialogText("An error occurred, please try again later.")
                 console.error(e)
 
                 setTimeout(() => {
