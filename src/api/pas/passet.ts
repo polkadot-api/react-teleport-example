@@ -10,6 +10,7 @@ const pas: AssetInChain = {
   chain,
   symbol: "PAS",
   watchFreeBalance: watchAccoutFreeBalance(api),
+  watchPorteerStatus: null,
   teleport: {
     pas: (...args) =>
       api.tx.PolkadotXcm.transfer_assets(fromAssetHubToRelay(...args)),

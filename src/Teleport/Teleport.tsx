@@ -13,6 +13,7 @@ import { Card, CardHeader } from "@/components/ui/card"
 import { FormattedToken } from "./FormattedToken"
 import { Input } from "@/components/ui/input"
 import { FeesAndSubmit } from "./FeesAndSubmit"
+import { usePorteerStatus } from "@/Teleport/use-porteer-status.ts"
 
 const Selector: React.FC<{
   value: string
@@ -82,6 +83,11 @@ export const Teleport: React.FC = () => {
   )
   const [amount, setAmount] = useState<number | null>(null)
   const fromBalance = useBalance(from, asset.selected)
+  const usePorteer = ((from === "itk" && to.selected === "itp") ||
+    (from === "itp" && to.selected === "itk") && asset.selected === "TEER");
+  const fromPorteerHeartbeat = usePorteer
+    ? usePorteerStatus(from)
+    : undefined
 
   return (
     <>
@@ -142,6 +148,13 @@ export const Teleport: React.FC = () => {
           </li>
         </ul>
       </Card>
+      {usePorteer && (
+        <Card className="w-full max-w-sm">
+          <CardHeader className="m-0 p-2 text-center">
+            Porteer Status
+          </CardHeader>
+        </Card>
+      )}
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="amount">Amount</Label>
         <Input

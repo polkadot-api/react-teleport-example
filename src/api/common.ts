@@ -1,5 +1,6 @@
 import { AccountId, PolkadotSigner, TypedApi } from "polkadot-api"
 import {
+  itk, dotAh,
   XcmV3Junction,
   XcmV3JunctionNetworkId,
   XcmV3Junctions,
@@ -7,7 +8,6 @@ import {
   XcmV3WeightLimit,
   XcmVersionedAssets,
   XcmVersionedLocation,
-  dotAh,
 } from "@polkadot-api/descriptors"
 import { Binary, Enum, SS58String } from "polkadot-api"
 import { combineLatest, from, map } from "rxjs"
@@ -158,6 +158,7 @@ export const toAssetHub = (
 */
 
 type GenericApi = TypedApi<typeof dotAh>
+type IntegriteeApi = TypedApi<typeof itk>
 
 export const watchAccoutFreeBalance = (api: {
   constants: {
@@ -207,3 +208,34 @@ export const watchForeingAssetAccoutFreeBalance =
         data?.status && Enum.is(data.status, "Liquid") ? data.balance : 0n,
       ),
     )
+
+
+export const watchPorteerStatus = (api: {
+  query: {
+    Porteer: {
+      LastHeartBeat: {
+        watchValue: IntegriteeApi["query"]["Porteer"]["LastHeartBeat"]["watchValue"]
+      },
+      PorteerConfigValue: {
+        watchValue: IntegriteeApi["query"]["Porteer"]["PorteerConfigValue"]["watchValue"]
+      },
+      XcmFeeConfig: {
+        watchValue: IntegriteeApi["query"]["Porteer"]["XcmFeeConfig"]["watchValue"]
+      }
+    }
+  }
+}) => {
+  return () =>
+    combineLatest([
+      api.query.Porteer.LastHeartBeat.watchValue("best"),
+      api.query.Porteer.PorteerConfigValue.watchValue("best"),
+      api.query.Porteer.XcmFeeConfig.watchValue("best"),
+    ]).pipe(
+      map(([heartbeat, config, fees]) => {
+        console.log("heartbeat: ", heartbeat)
+        console.log("config: ", config)
+        console.log("fees: ", fees)
+        return { heartbeat, config, fees }
+      }),
+    )
+}

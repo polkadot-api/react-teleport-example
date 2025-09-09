@@ -13,6 +13,7 @@ const pas: AssetInChain = {
   chain: "pas",
   symbol: "PAS",
   watchFreeBalance: watchAccoutFreeBalance(api),
+  watchPorteerStatus: null,
   teleport: {
     pasAh: (...args) =>
       api.tx.XcmPallet.transfer_assets(fromRelayToAssetHub(...args)),

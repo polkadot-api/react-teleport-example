@@ -16,6 +16,7 @@ const ksm: AssetInChain = {
   chain: "ksmEnc",
   symbol: "KSM",
   watchFreeBalance: watchAccoutFreeBalance(api),
+  watchPorteerStatus: null,
   teleport: {
     ksm: (...args) =>
       api.tx.PolkadotXcm.limited_teleport_assets(fromEncointerToRelay(...args)),

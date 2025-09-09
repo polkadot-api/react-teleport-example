@@ -23,6 +23,7 @@ const dot: AssetInChain = {
   chain: "dotAh",
   symbol: "DOT",
   watchFreeBalance: watchAccoutFreeBalance(api),
+  watchPorteerStatus: null,
   teleport: {
     dot: (...args) =>
       api.tx.PolkadotXcm.transfer_assets(fromAssetHubToRelay(...args)),
@@ -50,6 +51,7 @@ const ksm: AssetInChain = {
   chain: "dotAh",
   symbol: "KSM",
   watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, ksmInDotAh),
+  watchPorteerStatus: null,
   teleport: {
     /*
     ksmAh: (from, amount, to) =>
@@ -82,6 +84,7 @@ const teer: AssetInChain = {
   chain: "dotAh",
   symbol: "TEER",
   watchFreeBalance: watchForeingAssetAccoutFreeBalance(api, teerInDotAh),
+  watchPorteerStatus: null,
   teleport: {
     itp: (from, amount, to) =>
       api.tx.PolkadotXcm.transfer_assets(

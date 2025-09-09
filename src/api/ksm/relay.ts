@@ -9,6 +9,7 @@ const ksm: AssetInChain = {
   chain: "ksm",
   symbol: "KSM",
   watchFreeBalance: watchAccoutFreeBalance(api),
+  watchPorteerStatus: null,
   teleport: {
     ksmAh: (...args) =>
       api.tx.XcmPallet.transfer_assets(fromRelayToAssetHub(...args)),

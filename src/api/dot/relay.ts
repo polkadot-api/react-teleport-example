@@ -9,6 +9,7 @@ const dot: AssetInChain = {
   chain: "dot",
   symbol: "DOT",
   watchFreeBalance: watchAccoutFreeBalance(api),
+  watchPorteerStatus: null,
   teleport: {
     dotAh: (...args) =>
       api.tx.XcmPallet.transfer_assets(fromRelayToAssetHub(...args)),

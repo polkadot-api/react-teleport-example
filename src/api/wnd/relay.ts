@@ -9,6 +9,7 @@ const wnd: AssetInChain = {
   chain: "wnd",
   symbol: "WND",
   watchFreeBalance: watchAccoutFreeBalance(api),
+  watchPorteerStatus: null,
   teleport: {
     wndAh: (...args) =>
       api.tx.XcmPallet.transfer_assets(fromRelayToAssetHub(...args)),
