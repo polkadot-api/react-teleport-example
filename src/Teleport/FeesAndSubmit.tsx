@@ -1,5 +1,9 @@
 import { ASSET_DECIMALS, AssetId, CHAIN_NAMES, ChainId, chains } from "@/api"
 import {
+  itk
+} from "@polkadot-api/descriptors"
+import { itkClient } from "@/api/clients"
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -19,6 +23,13 @@ import React, {
 import { FormattedToken } from "./FormattedToken"
 import { cn, formatCurrency } from "@/lib/utils"
 
+const api = itkClient.getTypedApi(itk)
+
+type PorteerQueueElement = {
+  //source_nonce: number,
+  amount: bigint,
+  hasArrivedOnOtherSide: boolean
+}
 const SubmitDialog: React.FC<
   PropsWithChildren<{
     signer: PolkadotSigner
@@ -30,6 +41,7 @@ const SubmitDialog: React.FC<
 > = ({ signer, signSubmitAndWatch, disabled, children }) => {
   const [dialogText, setDialogText] = useState<string>()
   const [openDialog, setOpenDialog] = useState<boolean>(false)
+  const [porteerQueue, setPorteerQueue] = useState<PorteerQueueElement[]>([])
   return (
     <Dialog open={openDialog}>
       <DialogTrigger>
@@ -51,17 +63,31 @@ const SubmitDialog: React.FC<
                     break
                   }
                   case "txBestBlocksState": {
-                    e.found
-                      ? e.ok
-                        ? setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), and it's being successful! 🎉`)
-                        : setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), but it's failing... 😞`)
-                      : e.isValid
-                        ? setDialogText(
-                            "The transaction has been validated and broadcasted",
-                          )
-                        : setDialogText(
-                            "The transaction is not valid anymore in the latest known best block",
-                          )
+                    if (e.found) {
+                      if (e.ok) {
+                        setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), and it's being successful! 🎉`)
+                        console.log("events:", e.events)
+                        // TODO this is a hack! we should not instantiate a new api of hardcoded type here, but it should work for both ITK and ITP
+                        const filteredEvents = api.event.Porteer.PortedTokens.filter(e.events);
+                        console.log("filteredEvents:", filteredEvents);
+                        if (filteredEvents.length > 0) {
+                          // TODO: replace amount with source_nonce
+                          const amount = Number(filteredEvents[0].amount);
+                          console.log("found PortedTokens Event with amount:", amount);
+                          const newElement: PorteerQueueElement = {
+                            amount: BigInt(amount),
+                            hasArrivedOnOtherSide: false
+                          };
+                          setPorteerQueue(prev => [...prev, newElement])
+                        }
+                      } else {
+                        setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), but it's failing... 😞`)
+                      }
+                    } else if (e.isValid) {
+                      setDialogText("The transaction has been validated and broadcasted")
+                    } else {
+                      setDialogText("The transaction is not valid anymore in the latest known best block")
+                    }
                     break
                   }
                   case "finalized": {
@@ -95,6 +121,13 @@ const SubmitDialog: React.FC<
         >
           Teleport
         </Button>
+        <div>
+          queue: {porteerQueue.map((item, idx) => (
+          <div key={idx}>
+            amount: {item.amount.toString()}, arrived: {item.hasArrivedOnOtherSide ? "yes" : "no"}
+          </div>
+        ))}
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>{children}</DialogTitle>

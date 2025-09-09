@@ -91,7 +91,7 @@ function formatTimeAgo(epoch: bigint, now: number): string {
 
 function isPorteerHeartbeatStale(epoch: bigint): boolean {
   const now = Date.now();
-  return now - Number(epoch) > 28 * 60 * 1000; // minutes in ms
+  return now - Number(epoch) > 928 * 60 * 1000; // minutes in ms
 }
 
 export const Teleport: React.FC = () => {
