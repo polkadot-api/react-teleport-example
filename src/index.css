@@ -140,3 +140,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+.warning-box {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 8px;
+  font-weight: bold;
+  text-align: center;
+}

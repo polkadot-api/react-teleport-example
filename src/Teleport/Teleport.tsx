@@ -1,7 +1,7 @@
-import React, { Reducer, useReducer, useState } from "react"
+import React, { Reducer, useReducer, useState, useEffect } from "react"
 import { useBalance } from "./use-balance"
 import { Label } from "@/components/ui/label"
-import { AssetId, CHAIN_NAMES, ChainId, chains } from "@/api"
+import { AssetId, CHAIN_NAMES, ASSET_DECIMALS, ChainId, chains } from "@/api"
 import {
   SelectTrigger,
   SelectValue,
@@ -76,6 +76,24 @@ const initialState = teleportReducer({ asset: {} } as TeleporterState, {
   value: "dot",
 })
 
+function formatTimeAgo(epoch: bigint, now: number): string {
+  const diff = Math.max(0, now - Number(epoch));
+  console.log("time ago: now: ", now, "last: ", Number(epoch), "diff: ", diff);
+  const seconds = Math.floor(diff / 1000);
+  if (seconds < 60) return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days !== 1 ? "s" : ""} ago`;
+}
+
+function isPorteerHeartbeatStale(epoch: bigint): boolean {
+  const now = Date.now();
+  return now - Number(epoch) > 1 * 60 * 1000; // 30 minutes in ms
+}
+
 export const Teleport: React.FC = () => {
   const [{ from, to, asset }, dispatch] = useReducer(
     teleportReducer,
@@ -87,6 +105,15 @@ export const Teleport: React.FC = () => {
     (from === "itp" && to.selected === "itk") && asset.selected === "TEER");
   console.log("usePorteer: ", usePorteer);
   const sourcePorteerStatus = usePorteerStatus(from, asset.selected);
+  const destinationPorteerStatus = usePorteerStatus(to.selected, asset.selected);
+  const heartbeatStale = !!(usePorteer && sourcePorteerStatus?.heartbeat && isPorteerHeartbeatStale(sourcePorteerStatus.heartbeat));
+  const bridgeEnabled = !!(usePorteer && sourcePorteerStatus?.config.send_enabled && destinationPorteerStatus?.config.receive_enabled);
+
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   console.log("sourcePorteerStatus: ", sourcePorteerStatus);
   return (
@@ -154,7 +181,21 @@ export const Teleport: React.FC = () => {
             Porteer Status
           </CardHeader>
           <div>
-            { sourcePorteerStatus.heartbeat }
+            Last heartbeat: { formatTimeAgo(sourcePorteerStatus.heartbeat, now) }
+          </div>
+
+          {bridgeEnabled && heartbeatStale && (
+            <div className="warning-box" role="alert">
+              ⚠️ Bridge is paused
+            </div>
+          )}
+          {!bridgeEnabled && (
+            <div className="warning-box" role="alert">
+              ⚠️ Bridge is disabled
+            </div>
+          )}
+          <div>
+            Bridge fee: { Number(sourcePorteerStatus?.fees.local_equivalent_sum * 1000n / 10n ** BigInt(ASSET_DECIMALS[asset.selected]))/1000 } TEER
           </div>
         </Card>
       )}
@@ -176,6 +217,7 @@ export const Teleport: React.FC = () => {
         to={to.selected}
         asset={asset.selected}
         amount={amount}
+        disabled={!bridgeEnabled || heartbeatStale}
       />
     </>
   )

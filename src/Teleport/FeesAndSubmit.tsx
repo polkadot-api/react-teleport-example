@@ -25,8 +25,9 @@ const SubmitDialog: React.FC<
     signSubmitAndWatch: RefObject<
       Transaction<any, any, any, any>["signSubmitAndWatch"] | undefined
     >
+    disabled?: boolean
   }>
-> = ({ signer, signSubmitAndWatch, children }) => {
+> = ({ signer, signSubmitAndWatch, disabled, children }) => {
   const [dialogText, setDialogText] = useState<string>()
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   return (
@@ -94,6 +95,7 @@ const SubmitDialog: React.FC<
             })
           }}
           className="w-full"
+          disabled={disabled}
         >
           Teleport
         </Button>
@@ -111,7 +113,8 @@ export const FeesAndSubmit: React.FC<{
   to: ChainId
   asset: AssetId
   amount: number | null
-}> = ({ from, to, asset, amount }) => {
+  disabled?: boolean
+}> = ({ from, to, asset, amount, disabled }) => {
   const account = useSelectedAccount()
   const [fees, setFees] = useState<bigint | null>()
   const signSubmitAndWatch =
@@ -141,7 +144,7 @@ export const FeesAndSubmit: React.FC<{
       clearTimeout(token)
       token = null
     }
-  }, [from, to, asset, amount])
+  }, [from, to, asset, amount, disabled])
 
   return (
     <>
@@ -170,6 +173,7 @@ export const FeesAndSubmit: React.FC<{
       <SubmitDialog
         signSubmitAndWatch={signSubmitAndWatch}
         signer={account.polkadotSigner}
+        disabled={disabled}
       >
         Teleporting{" "}
         {formatCurrency(fixedAmount, ASSET_DECIMALS[asset], {
