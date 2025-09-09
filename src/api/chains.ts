@@ -5,7 +5,10 @@ import pas from "./pas"
 
 import { AssetId, AssetInChain, ChainId } from "./types"
 
-const assetsInChains = [...dot, ...ksm, ...wnd, ...pas]
+// const assetsInChains = [...dot, ...ksm, ...wnd, ...pas]
+
+// only production consensus systems:
+const assetsInChains = [...dot, ...ksm]
 
 export const chains = new Map<ChainId, Map<AssetId, AssetInChain>>()
 

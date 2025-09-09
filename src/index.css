@@ -151,3 +151,23 @@
   font-weight: bold;
   text-align: center;
 }
+.error-box {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 8px;
+  font-weight: bold;
+  text-align: center;
+}
+.good-box {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 8px;
+  font-weight: bold;
+  text-align: center;
+}

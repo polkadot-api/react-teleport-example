@@ -73,7 +73,7 @@ const teleportReducer: Reducer<
 
 const initialState = teleportReducer({ asset: {} } as TeleporterState, {
   type: "from",
-  value: "dot",
+  value: "itk",
 })
 
 function formatTimeAgo(epoch: bigint, now: number): string {
@@ -91,7 +91,7 @@ function formatTimeAgo(epoch: bigint, now: number): string {
 
 function isPorteerHeartbeatStale(epoch: bigint): boolean {
   const now = Date.now();
-  return now - Number(epoch) > 1 * 60 * 1000; // 30 minutes in ms
+  return now - Number(epoch) > 995 * 60 * 1000; // 30 minutes in ms
 }
 
 export const Teleport: React.FC = () => {
@@ -107,7 +107,6 @@ export const Teleport: React.FC = () => {
     || (from === "itk" && to.selected === "dotAh")
     || (from === "itp" && to.selected === "ksmAh")
   );
-  console.log("usePorteer: ", usePorteer);
   const sourcePorteerStatus = usePorteerStatus(from, asset.selected);
   const destinationPorteerStatus = usePorteerStatus(to.selected, asset.selected);
   const heartbeatStale = !!(usePorteer && sourcePorteerStatus?.heartbeat && isPorteerHeartbeatStale(sourcePorteerStatus.heartbeat));
@@ -119,7 +118,6 @@ export const Teleport: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  console.log("sourcePorteerStatus: ", sourcePorteerStatus);
   return (
     <>
       <div className="flex flex-col space-y-1.5">
@@ -181,26 +179,29 @@ export const Teleport: React.FC = () => {
       </Card>
       {(usePorteer && sourcePorteerStatus != null) && (
         <Card className="w-full max-w-sm">
-          <CardHeader className="m-0 p-2 text-center">
-            TEER Bridge Status
-          </CardHeader>
-          <div>
-            Last heartbeat: { formatTimeAgo(sourcePorteerStatus.heartbeat, now) }
-          </div>
-
+          {//< div>
+           // Last heartbeat: { formatTimeAgo(sourcePorteerStatus.heartbeat, now) }
+           //</div>
+          }
           {bridgeEnabled && heartbeatStale && (
             <div className="warning-box" role="alert">
-              ⚠️ Bridge is paused
+              ⚠️ Bridge is paused.
             </div>
           )}
           {!bridgeEnabled && (
-            <div className="warning-box" role="alert">
-              ⚠️ Bridge is disabled
+            <div className="error-box" role="alert">
+              ⛔ Bridge is disabled.
             </div>
           )}
-          <div>
-            extra bridge fee: { Number(sourcePorteerStatus?.fees.local_equivalent_sum * 1000n / 10n ** BigInt(ASSET_DECIMALS[asset.selected]))/1000 } TEER
-          </div>
+          {bridgeEnabled && !heartbeatStale && (
+            <div className="good-box" role="alert">
+              ️✅ Bridge is operational.
+            </div>
+          )}
+          {//<div>
+           // extra bridge fee: { Number(sourcePorteerStatus?.fees.local_equivalent_sum * 10000n / 10n ** BigInt(ASSET_DECIMALS[asset.selected]))/10000 } TEER
+           // </div -->
+          }
         </Card>
       )}
       <div className="grid w-full max-w-sm items-center gap-1.5">
