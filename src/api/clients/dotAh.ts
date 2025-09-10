@@ -15,5 +15,6 @@ const smoldotParaChain = Promise.all([
 // export const dotAhClient = createClient(getSmProvider(smoldotParaChain))
 
 export const dotAhClient = createClient(withPolkadotSdkCompat(
-  getWsProvider("ws://localhost:8002")
+  //getWsProvider("ws://localhost:8002") // chopsticks
+  getWsProvider("ws://localhost:9910") // zombienet
 ))

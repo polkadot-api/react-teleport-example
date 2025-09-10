@@ -5,5 +5,6 @@ import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat";
 
 export const itkClient = createClient(withPolkadotSdkCompat(
   //getWsProvider("wss://kusama.api.integritee.network")
-  getWsProvider("ws://localhost:8001")
+  //getWsProvider("ws://localhost:8001") // chopsticks
+  getWsProvider("ws://localhost:9144") // zombienet
 ))

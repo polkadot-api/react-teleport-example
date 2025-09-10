@@ -1,8 +1,8 @@
 import { ASSET_DECIMALS, AssetId, CHAIN_NAMES, ChainId, chains } from "@/api"
 import {
-  itk
+  itk, itp
 } from "@polkadot-api/descriptors"
-import { itkClient } from "@/api/clients"
+import { itkClient, itpClient } from "@/api/clients"
 import {
   Dialog,
   DialogContent,
@@ -23,11 +23,14 @@ import React, {
 import { FormattedToken } from "./FormattedToken"
 import { cn, formatCurrency } from "@/lib/utils"
 
-const api = itkClient.getTypedApi(itk)
+const itkApi = itkClient.getTypedApi(itk)
+const itpApi = itpClient.getTypedApi(itp)
 
 type PorteerQueueElement = {
-  //source_nonce: number,
+  time_included: Date
+  who: string,
   amount: bigint,
+  source_nonce: number,
   hasArrivedOnOtherSide: boolean
 }
 const SubmitDialog: React.FC<
@@ -42,6 +45,32 @@ const SubmitDialog: React.FC<
   const [dialogText, setDialogText] = useState<string>()
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [porteerQueue, setPorteerQueue] = useState<PorteerQueueElement[]>([])
+
+  // useEffect(() => {
+  //   console.log("A new item was added to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
+  // }, [porteerQueue]);
+  useEffect(() => {
+    const subscription = itpApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
+      .forEach((event) => {
+        console.log("Detected MintedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        setPorteerQueue(prev => {
+          const index = prev.findIndex(item => item.source_nonce === Number(event.payload.source_nonce));
+          if (index !== -1) {
+            console.log("found match:", prev[index]);
+            const newQueue = [...prev];
+            newQueue[index].hasArrivedOnOtherSide = true;
+            return newQueue;
+          }
+          return prev;
+        });
+      });
+    return () => {
+      if (subscription && typeof subscription.unsubscribe === "function") {
+        subscription.unsubscribe();
+      }
+    };
+  }, []);
+
   return (
     <Dialog open={openDialog}>
       <DialogTrigger>
@@ -68,15 +97,20 @@ const SubmitDialog: React.FC<
                         setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), and it's being successful! 🎉`)
                         console.log("events:", e.events)
                         // TODO this is a hack! we should not instantiate a new api of hardcoded type here, but it should work for both ITK and ITP
-                        const filteredEvents = api.event.Porteer.PortedTokens.filter(e.events);
+                        const filteredEvents = itkApi.event.Porteer.PortedTokens.filter(e.events);
                         console.log("filteredEvents:", filteredEvents);
                         if (filteredEvents.length > 0) {
                           // TODO: replace amount with source_nonce
-                          const amount = Number(filteredEvents[0].amount);
-                          console.log("found PortedTokens Event with amount:", amount);
+                          const amount = filteredEvents[0].amount;
+                          const who = filteredEvents[0].who.toString();
+                          const source_nonce = Number(filteredEvents[0].source_nonce);
+                          console.log("found PortedTokens Event with amount:", amount, ", who:", who, ", source_nonce:", source_nonce);
                           const newElement: PorteerQueueElement = {
-                            amount: BigInt(amount),
-                            hasArrivedOnOtherSide: false
+                            time_included: new Date(),
+                            who: who,
+                            amount: amount,
+                            hasArrivedOnOtherSide: false,
+                            source_nonce: source_nonce
                           };
                           setPorteerQueue(prev => [...prev, newElement])
                         }
@@ -124,7 +158,7 @@ const SubmitDialog: React.FC<
         <div>
           queue: {porteerQueue.map((item, idx) => (
           <div key={idx}>
-            amount: {item.amount.toString()}, arrived: {item.hasArrivedOnOtherSide ? "yes" : "no"}
+            who: { item.who },  amount: {item.amount.toString()}, nonce: {item.source_nonce}, arrived: {item.hasArrivedOnOtherSide ? "yes" : "no"}
           </div>
         ))}
         </div>

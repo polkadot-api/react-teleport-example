@@ -110,7 +110,7 @@ export const Teleport: React.FC = () => {
   const otherPorteer = usePorteer ? (from === "itk" ? "itp" : "itk") : "itk";
   const sourcePorteerStatus = usePorteerStatus(from, asset.selected);
   const destinationPorteerStatus = usePorteerStatus(otherPorteer, asset.selected);
-  const heartbeatStale = !!(usePorteer && sourcePorteerStatus?.heartbeat && isPorteerHeartbeatStale(sourcePorteerStatus.heartbeat));
+  const heartbeatStale = !!(usePorteer && isPorteerHeartbeatStale(sourcePorteerStatus?.heartbeat));
   const bridgeEnabled = !!(usePorteer && sourcePorteerStatus?.config.send_enabled && destinationPorteerStatus?.config.receive_enabled);
 
   const [now, setNow] = useState(Date.now());

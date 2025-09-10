@@ -15,5 +15,6 @@ const smoldotParaChain = Promise.all([
 // export const ksmAhClient = createClient(getSmProvider(smoldotParaChain))
 
 export const ksmAhClient = createClient(withPolkadotSdkCompat(
-  getWsProvider("ws://localhost:8000")
+  // getWsProvider("ws://localhost:8000") // chopsticks
+  getWsProvider("ws://localhost:9010") // zombienet
 ))
