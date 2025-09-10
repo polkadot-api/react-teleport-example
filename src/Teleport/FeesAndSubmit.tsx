@@ -31,7 +31,9 @@ type PorteerQueueElement = {
   who: string,
   amount: bigint,
   source_nonce: number,
+  destination: ChainId,
   hasArrivedOnOtherSide: boolean
+  hasArrivedOnDestination: boolean
 }
 const SubmitDialog: React.FC<
   PropsWithChildren<{
@@ -39,9 +41,10 @@ const SubmitDialog: React.FC<
     signSubmitAndWatch: RefObject<
       Transaction<any, any, any, any>["signSubmitAndWatch"] | undefined
     >
+    to: ChainId
     disabled?: boolean
   }>
-> = ({ signer, signSubmitAndWatch, disabled, children }) => {
+> = ({ signer, signSubmitAndWatch, to, disabled, children }) => {
   const [dialogText, setDialogText] = useState<string>()
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [porteerQueue, setPorteerQueue] = useState<PorteerQueueElement[]>([])
@@ -50,26 +53,49 @@ const SubmitDialog: React.FC<
   //   console.log("A new item was added to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
   // }, [porteerQueue]);
   useEffect(() => {
-    const subscription = itpApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
-      .forEach((event) => {
-        console.log("Detected MintedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
-        setPorteerQueue(prev => {
-          const index = prev.findIndex(item => item.source_nonce === Number(event.payload.source_nonce));
-          if (index !== -1) {
-            console.log("found match:", prev[index]);
-            const newQueue = [...prev];
-            newQueue[index].hasArrivedOnOtherSide = true;
-            return newQueue;
-          }
-          return prev;
+    console.log("SubmitDialog mounted, setting up Porteer subscriptions for destination:", to);
+    let subscription: any;
+    if (to === "itp") {
+      console.log("Setting up subscription to Porteer.MintedPortedTokens on ITP");
+      subscription = itpApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
+        .forEach((event) => {
+          console.log("Detected MintedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+          setPorteerQueue(prev => {
+            const index = prev.findIndex(item => item.destination === "itp" && item.source_nonce === Number(event.payload.source_nonce));
+            if (index !== -1) {
+              console.log("found match:", prev[index]);
+              const newQueue = [...prev];
+              newQueue[index].hasArrivedOnOtherSide = true;
+              newQueue[index].hasArrivedOnDestination = true;
+              return newQueue;
+            }
+            return prev;
+          });
         });
-      });
+    } else if (to === "itk") {
+      console.log("Setting up subscription to Porteer.MintedPortedTokens on ITK");
+      subscription = itkApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
+        .forEach((event) => {
+          console.log("Detected MintedPortedTokens event on ITK who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+          setPorteerQueue(prev => {
+            const index = prev.findIndex(item => item.destination === "itk" && item.source_nonce === Number(event.payload.source_nonce));
+            if (index !== -1) {
+              console.log("found match:", prev[index]);
+              const newQueue = [...prev];
+              newQueue[index].hasArrivedOnOtherSide = true;
+              newQueue[index].hasArrivedOnDestination = true;
+              return newQueue;
+            }
+            return prev;
+          });
+        });
+    }
     return () => {
       if (subscription && typeof subscription.unsubscribe === "function") {
         subscription.unsubscribe();
       }
     };
-  }, []);
+  }, [to]);
 
   return (
     <Dialog open={openDialog}>
@@ -109,7 +135,9 @@ const SubmitDialog: React.FC<
                             time_included: new Date(),
                             who: who,
                             amount: amount,
+                            destination: to,
                             hasArrivedOnOtherSide: false,
+                            hasArrivedOnDestination: false,
                             source_nonce: source_nonce
                           };
                           setPorteerQueue(prev => [...prev, newElement])
@@ -158,7 +186,7 @@ const SubmitDialog: React.FC<
         <div>
           queue: {porteerQueue.map((item, idx) => (
           <div key={idx}>
-            who: { item.who },  amount: {item.amount.toString()}, nonce: {item.source_nonce}, arrived: {item.hasArrivedOnOtherSide ? "yes" : "no"}
+            who: { item.who },  amount: {item.amount.toString()}, nonce: {item.source_nonce}, arrived on other side: {item.hasArrivedOnOtherSide ? "yes" : "no"} destination: {item.hasArrivedOnDestination ? "yes" : "no"}
           </div>
         ))}
         </div>
@@ -237,6 +265,7 @@ export const FeesAndSubmit: React.FC<{
       <SubmitDialog
         signSubmitAndWatch={signSubmitAndWatch}
         signer={account.polkadotSigner}
+        to={to}
         disabled={disabled}
       >
         Teleporting{" "}
