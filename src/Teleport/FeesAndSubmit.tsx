@@ -48,54 +48,56 @@ const SubmitDialog: React.FC<
   const [dialogText, setDialogText] = useState<string>()
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [porteerQueue, setPorteerQueue] = useState<PorteerQueueElement[]>([])
+  const porteerQueueRef = useRef(porteerQueue);
 
-  // useEffect(() => {
-  //   console.log("A new item was added to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
-  // }, [porteerQueue]);
   useEffect(() => {
-    console.log("SubmitDialog mounted, setting up Porteer subscriptions for destination:", to);
-    let subscription: any;
-    if (to === "itp") {
-      console.log("Setting up subscription to Porteer.MintedPortedTokens on ITP");
-      subscription = itpApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
-        .forEach((event) => {
-          console.log("Detected MintedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
-          setPorteerQueue(prev => {
-            const index = prev.findIndex(item => item.destination === "itp" && item.source_nonce === Number(event.payload.source_nonce));
-            if (index !== -1) {
-              console.log("found match:", prev[index]);
-              const newQueue = [...prev];
-              newQueue[index].hasArrivedOnOtherSide = true;
-              newQueue[index].hasArrivedOnDestination = true;
-              return newQueue;
-            }
-            return prev;
-          });
+    console.log("A new item was added to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
+    porteerQueueRef.current = porteerQueue;
+  }, [porteerQueue]);
+  useEffect(() => {
+    let subscriptions: any[] = [];
+    console.log("Setting up subscription to Porteer.MintedPortedTokens on ITP");
+    subscriptions.push(itpApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
+      .forEach((event) => {
+        console.log("Detected MintedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        const prev = porteerQueueRef.current;
+        const index = prev.findIndex(item => item.destination === "itp" && item.source_nonce === Number(event.payload.source_nonce));
+        if (index !== -1) {
+          console.log("found match:", prev[index]);
+          const newQueue = [...prev];
+          newQueue[index].hasArrivedOnOtherSide = true;
+          newQueue[index].hasArrivedOnDestination = true;
+          setPorteerQueue(newQueue);
+        }
+      })
+    );
+
+    console.log("Setting up subscription to Porteer.MintedPortedTokens on ITK");
+    subscriptions.push(itkApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
+      .forEach((event) => {
+        console.log("Detected MintedPortedTokens event on ITK who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        setPorteerQueue(prev => {
+          const index = prev.findIndex(item => item.destination === "itk" && item.source_nonce === Number(event.payload.source_nonce));
+          if (index !== -1) {
+            console.log("found match:", prev[index]);
+            const newQueue = [...prev];
+            newQueue[index].hasArrivedOnOtherSide = true;
+            newQueue[index].hasArrivedOnDestination = true;
+            return newQueue;
+          }
+          return prev;
         });
-    } else if (to === "itk") {
-      console.log("Setting up subscription to Porteer.MintedPortedTokens on ITK");
-      subscription = itkApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
-        .forEach((event) => {
-          console.log("Detected MintedPortedTokens event on ITK who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
-          setPorteerQueue(prev => {
-            const index = prev.findIndex(item => item.destination === "itk" && item.source_nonce === Number(event.payload.source_nonce));
-            if (index !== -1) {
-              console.log("found match:", prev[index]);
-              const newQueue = [...prev];
-              newQueue[index].hasArrivedOnOtherSide = true;
-              newQueue[index].hasArrivedOnDestination = true;
-              return newQueue;
-            }
-            return prev;
-          });
-        });
-    }
+      })
+    );
+
     return () => {
-      if (subscription && typeof subscription.unsubscribe === "function") {
-        subscription.unsubscribe();
-      }
+      subscriptions.forEach(sub => {
+        if (sub && typeof sub.unsubscribe === "function") {
+          sub.unsubscribe();
+        }
+      });
     };
-  }, [to]);
+  }, []);
 
   return (
     <Dialog open={openDialog}>
