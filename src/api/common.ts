@@ -10,7 +10,7 @@ import {
   dotAh,
 } from "@polkadot-api/descriptors"
 import { Binary, Enum, SS58String } from "polkadot-api"
-import { combineLatest, from, map } from "rxjs"
+import { combineLatest, from, map, Observable } from "rxjs"
 
 const encodeAccount = AccountId().enc
 
@@ -127,17 +127,31 @@ export const watchAccoutFreeBalance = (api: {
 }
 
 export const watchForeingAssetAccoutFreeBalance =
-  (
+  <
+    A,
+    T extends {
+      balance: bigint
+      status: Enum<{
+        Liquid: undefined
+        Frozen: undefined
+        Blocked: undefined
+      }>
+    },
+  >(
     api: {
       query: {
         ForeignAssets: {
           Account: {
-            watchValue: GenericApi["query"]["ForeignAssets"]["Account"]["watchValue"]
+            watchValue: (
+              asset: A,
+              account: SS58String,
+              at: "best",
+            ) => Observable<T | undefined>
           }
         }
       }
     },
-    asset: { parents: number; interior: XcmV5Junctions },
+    asset: A,
   ) =>
   (account: SS58String) =>
     api.query.ForeignAssets.Account.watchValue(asset, account, "best").pipe(
