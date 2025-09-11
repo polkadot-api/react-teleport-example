@@ -25,6 +25,7 @@ import React, {
 } from "react"
 import { FormattedToken } from "./FormattedToken"
 import { cn, formatCurrency } from "@/lib/utils"
+import { Label } from "@/components/ui/label.tsx"
 
 const itkApi = itkClient.getTypedApi(itk)
 const itpApi = itpClient.getTypedApi(itp)
@@ -33,6 +34,8 @@ const dotAhApi = dotAhClient.getTypedApi(dotAh)
 
 type PorteerQueueElement = {
   time_included: Date
+  time_arrived_other_side?: Date
+  time_arrived_destination?: Date
   who: string,
   amount: bigint,
   source_nonce: number,
@@ -55,8 +58,14 @@ const SubmitDialog: React.FC<
   const [porteerQueue, setPorteerQueue] = useState<PorteerQueueElement[]>([])
   const porteerQueueRef = useRef(porteerQueue);
 
+  const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    // console.log("A new item was added (or changed) to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    console.log("A new item was added (or changed) to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
     porteerQueueRef.current = porteerQueue;
   }, [porteerQueue]);
   useEffect(() => {
@@ -73,6 +82,7 @@ const SubmitDialog: React.FC<
           newQueue[index].hasArrivedOnOtherSide = true;
           if (newQueue[index].destination === "itp") {
             newQueue[index].hasArrivedOnDestination = true;
+            newQueue[index].time_arrived_destination = new Date();
           }
           setPorteerQueue(newQueue);
         }
@@ -88,6 +98,7 @@ const SubmitDialog: React.FC<
           console.log("[ITP] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnOtherSide = true;
+          newQueue[index].time_arrived_other_side = new Date();
           setPorteerQueue(newQueue);
         }
       })
@@ -105,6 +116,7 @@ const SubmitDialog: React.FC<
           newQueue[index].hasArrivedOnOtherSide = true;
           if (newQueue[index].destination === "itk") {
             newQueue[index].hasArrivedOnDestination = true;
+            newQueue[index].time_arrived_destination = new Date();
           }
           setPorteerQueue(newQueue);
         }
@@ -121,6 +133,7 @@ const SubmitDialog: React.FC<
           console.log("[ITK] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnOtherSide = true;
+          newQueue[index].time_arrived_other_side = new Date();
           setPorteerQueue(newQueue);
         }
       })
@@ -136,6 +149,7 @@ const SubmitDialog: React.FC<
           console.log("[dotAh] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnDestination = true;
+          newQueue[index].time_arrived_destination = new Date();
           setPorteerQueue(newQueue);
         }
       })
@@ -151,6 +165,7 @@ const SubmitDialog: React.FC<
           console.log("[ksmAh] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnDestination = true;
+          newQueue[index].time_arrived_destination = new Date();
           setPorteerQueue(newQueue);
         }
       })
@@ -205,7 +220,9 @@ const SubmitDialog: React.FC<
                             amount: amount,
                             destination: to,
                             hasArrivedOnOtherSide: false,
+                            time_arrived_other_side: undefined,
                             hasArrivedOnDestination: false,
+                            time_arrived_destination: undefined,
                             source_nonce: source_nonce
                           };
                           setPorteerQueue(prev => [...prev, newElement])
@@ -252,11 +269,22 @@ const SubmitDialog: React.FC<
           Teleport
         </Button>
         <div>
-          queue: {porteerQueue.map((item, idx) => (
-          <div key={idx}>
-            who: { item.who },  amount: {item.amount.toString()}, nonce: {item.source_nonce}, arrived on other side: {item.hasArrivedOnOtherSide ? "yes" : "no"} destination: {item.hasArrivedOnDestination ? "yes" : "no"}
-          </div>
+          TEER bridge queue:
+          <ul className="grid gap-3 m-1">
+            {porteerQueue.map((item, idx) => (
+              <li key={idx}>
+                <div>who: { item.who }</div>
+                <div>amount: {item.amount.toString()}</div>
+                <div>nonce: {item.source_nonce}</div>
+                {!item.hasArrivedOnDestination && <div>submitted {formatTimeAgo(BigInt(item.time_included.getTime()), now)}</div>}
+                {item.hasArrivedOnOtherSide && !item.hasArrivedOnDestination && item.time_arrived_other_side && <div>arrived on other side after {Math.round((item.time_arrived_other_side.getTime() - item.time_included.getTime()) / 1000)} seconds</div>}
+                {item.hasArrivedOnDestination && item.time_arrived_destination && <div>arrived on destination after {Math.round((item.time_arrived_destination.getTime() - item.time_included.getTime()) / 1000)} seconds</div>}
+                {!item.hasArrivedOnDestination && (
+                  <span className="inline-block ml-2 w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></span>
+                )}
+              </li>
         ))}
+          </ul>
         </div>
       </DialogTrigger>
       <DialogContent>
@@ -354,4 +382,17 @@ function addressesMatch(addressA: string, addressB: string) {
     infoB.isValid &&
     infoA.publicKey.length === infoB.publicKey.length &&
     infoA.publicKey.every((v, i) => v === infoB.publicKey[i])
-};
+}
+
+function formatTimeAgo(epoch: bigint, now: number): string {
+  const diff = Math.max(0, now - Number(epoch));
+  //console.log("time ago: now: ", now, "last: ", Number(epoch), "diff: ", diff);
+  const seconds = Math.floor(diff / 1000);
+  if (seconds < 60) return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days !== 1 ? "s" : ""} ago`;
+}

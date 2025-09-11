@@ -3,7 +3,7 @@ export const CHOPSTICKS: number = 1;
 export const ZOMBIENET: number = 2;
 
 
-export const ENDPOINTS = CHOPSTICKS;
+export const ENDPOINTS = ZOMBIENET;
 
 export const KAH_WS_URL = ENDPOINTS === LIVE
   ? "wss://sys.ibp.network/asset-hub-kusama"

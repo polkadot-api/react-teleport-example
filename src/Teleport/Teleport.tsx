@@ -76,19 +76,6 @@ const initialState = teleportReducer({ asset: {} } as TeleporterState, {
   value: "itk",
 })
 
-function formatTimeAgo(epoch: bigint, now: number): string {
-  const diff = Math.max(0, now - Number(epoch));
-  console.log("time ago: now: ", now, "last: ", Number(epoch), "diff: ", diff);
-  const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
-  const days = Math.floor(hours / 24);
-  return `${days} day${days !== 1 ? "s" : ""} ago`;
-}
-
 function isPorteerHeartbeatStale(epoch: bigint | undefined): boolean {
   const now = Date.now();
   return now - Number(epoch ? epoch : 0n) > 28 * 60 * 1000; // minutes in ms
@@ -117,11 +104,6 @@ export const Teleport: React.FC = () => {
   const accountUnableToExistOnDestination = asset.selected === "TEER"
     && ((to.selected === "dotAh" && !(dotBalanceOnAh > 0n))
     || (to.selected === "ksmAh" && !(ksmBalanceOnAh > 0n)));
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    const interval = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <>
