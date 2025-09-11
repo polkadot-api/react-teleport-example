@@ -142,7 +142,7 @@ const SubmitDialog: React.FC<
     );
 
     console.log("[ksmAh] Setting up subscription to ForeignAssets.Issued");
-    subscriptions.push(dotAhApi.event.ForeignAssets.Issued.watch(() => true)
+    subscriptions.push(ksmAhApi.event.ForeignAssets.Issued.watch(() => true)
       .forEach((event) => {
         console.log("[ksmAh] Detected ForeignAssets.Issued event: to", event.payload.owner?.toString(), " amount", event.payload.amount, " asset: ", event.payload.asset_id);
         const prev = porteerQueueRef.current;

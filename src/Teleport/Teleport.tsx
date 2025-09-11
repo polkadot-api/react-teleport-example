@@ -101,6 +101,8 @@ export const Teleport: React.FC = () => {
   )
   const [amount, setAmount] = useState<number | null>(null)
   const fromBalance = useBalance(from, asset.selected)
+  const dotBalanceOnAh = useBalance("dotAh", "DOT");
+  const ksmBalanceOnAh = useBalance("ksmAh", "KSM");
   const usePorteer = (asset.selected === "TEER"
     && (from === "itk" && to.selected === "itp")
     || (from === "itp" && to.selected === "itk")
@@ -113,8 +115,8 @@ export const Teleport: React.FC = () => {
   const heartbeatStale = !!(usePorteer && isPorteerHeartbeatStale(sourcePorteerStatus?.heartbeat));
   const bridgeEnabled = !!(usePorteer && sourcePorteerStatus?.config.send_enabled && destinationPorteerStatus?.config.receive_enabled);
   const accountUnableToExistOnDestination = asset.selected === "TEER"
-    && ((to.selected === "dotAh" && !(useBalance(to.selected, "DOT") > 0n))
-    || (to.selected === "ksmAh" && !(useBalance(to.selected, "KSM") > 0n)));
+    && ((to.selected === "dotAh" && !(dotBalanceOnAh > 0n))
+    || (to.selected === "ksmAh" && !(ksmBalanceOnAh > 0n)));
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -188,12 +190,12 @@ export const Teleport: React.FC = () => {
           }
           {bridgeEnabled && heartbeatStale && (
             <div className="warning-box" role="alert">
-              ⚠️ Bridge is paused.
+              ⚠️ Bridge is paused for the selected direction.
             </div>
           )}
           {!bridgeEnabled && (
             <div className="error-box" role="alert">
-              ⛔ Bridge is disabled.
+              ⛔ Bridge is disabled for the selected direction.
             </div>
           )}
           {bridgeEnabled && !heartbeatStale && (
