@@ -112,7 +112,9 @@ export const Teleport: React.FC = () => {
   const destinationPorteerStatus = usePorteerStatus(otherPorteer, asset.selected);
   const heartbeatStale = !!(usePorteer && isPorteerHeartbeatStale(sourcePorteerStatus?.heartbeat));
   const bridgeEnabled = !!(usePorteer && sourcePorteerStatus?.config.send_enabled && destinationPorteerStatus?.config.receive_enabled);
-
+  const accountUnableToExistOnDestination = asset.selected === "TEER"
+    && ((to.selected === "dotAh" && !(useBalance(to.selected, "DOT") > 0n))
+    || (to.selected === "ksmAh" && !(useBalance(to.selected, "KSM") > 0n)));
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -199,10 +201,20 @@ export const Teleport: React.FC = () => {
               ️✅ Bridge is operational.
             </div>
           )}
+
+
           {//<div>
            // extra bridge fee: { Number(sourcePorteerStatus?.fees.local_equivalent_sum * 10000n / 10n ** BigInt(ASSET_DECIMALS[asset.selected]))/10000 } TEER
            // </div -->
           }
+        </Card>
+      )}
+      {accountUnableToExistOnDestination && (
+        <Card className="w-full max-w-sm">
+        <div className="error-box" role="alert">
+          ⛔ Your account on the destination chain is not able to exist by only holding {asset.selected}. Please
+          transfer some {to.selected === "dotAh" ? "DOT" : "KSM"} first.
+        </div>
         </Card>
       )}
       <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -224,7 +236,11 @@ export const Teleport: React.FC = () => {
         asset={asset.selected}
         amount={amount}
         bridgeFee={usePorteer ? sourcePorteerStatus?.fees.local_equivalent_sum : 0n}
-        disabled={usePorteer && (!bridgeEnabled || heartbeatStale)}
+        disabled={
+          usePorteer &&
+            (!bridgeEnabled || heartbeatStale)
+          || accountUnableToExistOnDestination
+        }
       />
     </>
   )

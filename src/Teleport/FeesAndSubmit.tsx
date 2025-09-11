@@ -1,6 +1,6 @@
 import { ASSET_DECIMALS, AssetId, CHAIN_NAMES, ChainId, chains } from "@/api"
 import {
-  itk, itp, ksmAh, dotAh, MultiAddress
+  itk, itp, ksmAh, dotAh
 } from "@polkadot-api/descriptors"
 import {
   getSs58AddressInfo
@@ -56,19 +56,19 @@ const SubmitDialog: React.FC<
   const porteerQueueRef = useRef(porteerQueue);
 
   useEffect(() => {
-    console.log("A new item was added to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
+    // console.log("A new item was added (or changed) to porteerQueue:", porteerQueue[porteerQueue.length - 1]);
     porteerQueueRef.current = porteerQueue;
   }, [porteerQueue]);
   useEffect(() => {
     let subscriptions: any[] = [];
-    console.log("Setting up subscription to Porteer.MintedPortedTokens on ITP");
+    console.log("[ITP] Setting up subscription to Porteer.MintedPortedTokens");
     subscriptions.push(itpApi.event.Porteer.MintedPortedTokens.watch((  ) => true)
       .forEach((event) => {
-        console.log("Detected MintedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        console.log("[ITP] Detected MintedPortedTokens event: who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
         const prev = porteerQueueRef.current;
         const index = prev.findIndex(item => ["itp", "dotAh"].includes(item.destination) && item.source_nonce === Number(event.payload.source_nonce));
         if (index !== -1) {
-          console.log("found match:", prev[index]);
+          console.log("[ITP] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnOtherSide = true;
           if (newQueue[index].destination === "itp") {
@@ -78,14 +78,14 @@ const SubmitDialog: React.FC<
         }
       })
     );
-    console.log("Setting up subscription to Porteer.ForwardedPortedTokens on ITP");
+    console.log("[ITP] Setting up subscription to Porteer.ForwardedPortedTokens");
     subscriptions.push(itpApi.event.Porteer.ForwardedPortedTokens.watch((  ) => true)
       .forEach((event) => {
-        console.log("Detected ForwardedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        console.log("[ITP] Detected ForwardedPortedTokens event: who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
         const prev = porteerQueueRef.current;
         const index = prev.findIndex(item => item.destination === "dotAh" && item.source_nonce === Number(event.payload.source_nonce));
         if (index !== -1) {
-          console.log("found match:", prev[index]);
+          console.log("[ITP] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnOtherSide = true;
           setPorteerQueue(newQueue);
@@ -93,14 +93,14 @@ const SubmitDialog: React.FC<
       })
     );
 
-    console.log("Setting up subscription to Porteer.MintedPortedTokens on ITK");
+    console.log("[ITK] Setting up subscription to Porteer.MintedPortedTokens");
     subscriptions.push(itkApi.event.Porteer.MintedPortedTokens.watch((  ) => true)
       .forEach((event) => {
-        console.log("Detected MintedPortedTokens event on ITK who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        console.log("[ITK] Detected MintedPortedTokens event: who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
         const prev = porteerQueueRef.current;
         const index = prev.findIndex(item => ["itk", "ksmAh"].includes(item.destination) && item.source_nonce === Number(event.payload.source_nonce));
         if (index !== -1) {
-          console.log("found match:", prev[index]);
+          console.log("[ITK] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnOtherSide = true;
           if (newQueue[index].destination === "itk") {
@@ -111,14 +111,14 @@ const SubmitDialog: React.FC<
       })
     );
 
-    console.log("Setting up subscription to Porteer.ForwardedPortedTokens on ITK");
+    console.log("[ITK] Setting up subscription to Porteer.ForwardedPortedTokens");
     subscriptions.push(itkApi.event.Porteer.ForwardedPortedTokens.watch((  ) => true)
       .forEach((event) => {
-        console.log("Detected ForwardedPortedTokens event on ITK who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        console.log("[ITK] Detected ForwardedPortedTokens event: who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
         const prev = porteerQueueRef.current;
         const index = prev.findIndex(item => item.destination === "ksmAh" && item.source_nonce === Number(event.payload.source_nonce));
         if (index !== -1) {
-          console.log("found match:", prev[index]);
+          console.log("[ITK] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnOtherSide = true;
           setPorteerQueue(newQueue);
@@ -126,28 +126,36 @@ const SubmitDialog: React.FC<
       })
     );
 
-    console.log("Setting up subscription to ForeignAssets.Issued on dotAh");
+    console.log("[dotAh] Setting up subscription to ForeignAssets.Issued");
     subscriptions.push(dotAhApi.event.ForeignAssets.Issued.watch(() => true)
       .forEach((event) => {
-        console.log("Detected ForeignAssets.Issued event on dotAh to", event.payload.owner?.toString(), " amount", event.payload.amount, " asset: ", event.payload.asset_id.toString());
+        console.log("[dotAh] Detected ForeignAssets.Issued event: to", event.payload.owner?.toString(), " amount", event.payload.amount, " asset: ", event.payload.asset_id.toString());
         const prev = porteerQueueRef.current;
-        const ownerInfo = getSs58AddressInfo(event.payload.owner);
-        const index = prev.findIndex(item => {
-          const whoInfo = getSs58AddressInfo(item.who);
-          return item.destination === "dotAh" &&
-            ownerInfo.isValid &&
-            whoInfo.isValid &&
-            whoInfo.publicKey.length === ownerInfo.publicKey.length &&
-            whoInfo.publicKey.every((v, i) => v === ownerInfo.publicKey[i])
-        });
+        const index = prev.findIndex(item => item.destination === "dotAh" && addressesMatch(item.who, event.payload.owner));
         if (index !== -1) {
-          console.log("found match:", prev[index]);
+          console.log("[dotAh] found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnDestination = true;
           setPorteerQueue(newQueue);
         }
       })
     );
+
+    console.log("[ksmAh] Setting up subscription to ForeignAssets.Issued");
+    subscriptions.push(dotAhApi.event.ForeignAssets.Issued.watch(() => true)
+      .forEach((event) => {
+        console.log("[ksmAh] Detected ForeignAssets.Issued event: to", event.payload.owner?.toString(), " amount", event.payload.amount, " asset: ", event.payload.asset_id);
+        const prev = porteerQueueRef.current;
+        const index = prev.findIndex(item => item.destination === "ksmAh" && addressesMatch(item.who, event.payload.owner));
+        if (index !== -1) {
+          console.log("[ksmAh] found match:", prev[index]);
+          const newQueue = [...prev];
+          newQueue[index].hasArrivedOnDestination = true;
+          setPorteerQueue(newQueue);
+        }
+      })
+    );
+
     return () => {
       subscriptions.forEach(sub => {
         if (sub && typeof sub.unsubscribe === "function") {
@@ -338,3 +346,12 @@ export const FeesAndSubmit: React.FC<{
     </>
   )
 }
+
+function addressesMatch(addressA: string, addressB: string) {
+  const infoA = getSs58AddressInfo(addressA);
+  const infoB = getSs58AddressInfo(addressB);
+  return infoA.isValid &&
+    infoB.isValid &&
+    infoA.publicKey.length === infoB.publicKey.length &&
+    infoA.publicKey.every((v, i) => v === infoB.publicKey[i])
+};
