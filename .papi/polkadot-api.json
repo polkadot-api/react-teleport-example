@@ -61,13 +61,13 @@
       "wsUrl": "wss://polkadot.api.integritee.network",
       "metadata": ".papi/metadata/itp.scale",
       "genesis": "0xe13e7af377c64e83f95e0d70d5e5c3c01d697a84538776c5b9bbe0e7d7b6034c",
-      "codeHash": "0xbbe251db4a91d89eb85077566e857e0e301f7e9a9822a47a999de0d5b4560fe5"
+      "codeHash": "0xb0af24fed5f16dae6fc97645760ca4371a558b4bccc6b97e85acfea266c919ea"
     },
     "itk": {
-      "wsUrl": "ws://localhost:8001",
+      "wsUrl": "wss://kusama.api.integritee.network",
       "metadata": ".papi/metadata/itk.scale",
       "genesis": "0xcdedc8eadbfa209d3f207bba541e57c3c58a667b05a2e1d1e86353c9000758da",
-      "codeHash": "0x9e04dba919d4bdfcd328563e5ff6f2d1b2d5492599037fcb2e94a12131181236"
+      "codeHash": "0xa2a464ba172642998c46f063260bdab6aeeca2fcb266467494aa948f875f9cae"
     },
     "passet": {
       "wsUrl": "wss://testnet-passet-hub.polkadot.io",

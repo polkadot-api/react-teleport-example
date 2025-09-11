@@ -1,8 +1,11 @@
 import { ASSET_DECIMALS, AssetId, CHAIN_NAMES, ChainId, chains } from "@/api"
 import {
-  itk, itp
+  itk, itp, ksmAh, dotAh, MultiAddress
 } from "@polkadot-api/descriptors"
-import { itkClient, itpClient } from "@/api/clients"
+import {
+  getSs58AddressInfo
+} from "@polkadot-api/substrate-bindings"
+import { itkClient, itpClient, ksmAhClient, dotAhClient } from "@/api/clients"
 import {
   Dialog,
   DialogContent,
@@ -25,6 +28,8 @@ import { cn, formatCurrency } from "@/lib/utils"
 
 const itkApi = itkClient.getTypedApi(itk)
 const itpApi = itpClient.getTypedApi(itp)
+const ksmAhApi = ksmAhClient.getTypedApi(ksmAh)
+const dotAhApi = dotAhClient.getTypedApi(dotAh)
 
 type PorteerQueueElement = {
   time_included: Date
@@ -57,39 +62,92 @@ const SubmitDialog: React.FC<
   useEffect(() => {
     let subscriptions: any[] = [];
     console.log("Setting up subscription to Porteer.MintedPortedTokens on ITP");
-    subscriptions.push(itpApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
+    subscriptions.push(itpApi.event.Porteer.MintedPortedTokens.watch((  ) => true)
       .forEach((event) => {
         console.log("Detected MintedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
         const prev = porteerQueueRef.current;
-        const index = prev.findIndex(item => item.destination === "itp" && item.source_nonce === Number(event.payload.source_nonce));
+        const index = prev.findIndex(item => ["itp", "dotAh"].includes(item.destination) && item.source_nonce === Number(event.payload.source_nonce));
         if (index !== -1) {
           console.log("found match:", prev[index]);
           const newQueue = [...prev];
           newQueue[index].hasArrivedOnOtherSide = true;
-          newQueue[index].hasArrivedOnDestination = true;
+          if (newQueue[index].destination === "itp") {
+            newQueue[index].hasArrivedOnDestination = true;
+          }
+          setPorteerQueue(newQueue);
+        }
+      })
+    );
+    console.log("Setting up subscription to Porteer.ForwardedPortedTokens on ITP");
+    subscriptions.push(itpApi.event.Porteer.ForwardedPortedTokens.watch((  ) => true)
+      .forEach((event) => {
+        console.log("Detected ForwardedPortedTokens event on ITP who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        const prev = porteerQueueRef.current;
+        const index = prev.findIndex(item => item.destination === "dotAh" && item.source_nonce === Number(event.payload.source_nonce));
+        if (index !== -1) {
+          console.log("found match:", prev[index]);
+          const newQueue = [...prev];
+          newQueue[index].hasArrivedOnOtherSide = true;
           setPorteerQueue(newQueue);
         }
       })
     );
 
     console.log("Setting up subscription to Porteer.MintedPortedTokens on ITK");
-    subscriptions.push(itkApi.event.Porteer.MintedPortedTokens.watch(( { from } ) => true)
+    subscriptions.push(itkApi.event.Porteer.MintedPortedTokens.watch((  ) => true)
       .forEach((event) => {
         console.log("Detected MintedPortedTokens event on ITK who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
-        setPorteerQueue(prev => {
-          const index = prev.findIndex(item => item.destination === "itk" && item.source_nonce === Number(event.payload.source_nonce));
-          if (index !== -1) {
-            console.log("found match:", prev[index]);
-            const newQueue = [...prev];
-            newQueue[index].hasArrivedOnOtherSide = true;
+        const prev = porteerQueueRef.current;
+        const index = prev.findIndex(item => ["itk", "ksmAh"].includes(item.destination) && item.source_nonce === Number(event.payload.source_nonce));
+        if (index !== -1) {
+          console.log("found match:", prev[index]);
+          const newQueue = [...prev];
+          newQueue[index].hasArrivedOnOtherSide = true;
+          if (newQueue[index].destination === "itk") {
             newQueue[index].hasArrivedOnDestination = true;
-            return newQueue;
           }
-          return prev;
-        });
+          setPorteerQueue(newQueue);
+        }
       })
     );
 
+    console.log("Setting up subscription to Porteer.ForwardedPortedTokens on ITK");
+    subscriptions.push(itkApi.event.Porteer.ForwardedPortedTokens.watch((  ) => true)
+      .forEach((event) => {
+        console.log("Detected ForwardedPortedTokens event on ITK who", event.payload.who?.toString(), " nonce:", event.payload.source_nonce, "of amount", event.payload.amount);
+        const prev = porteerQueueRef.current;
+        const index = prev.findIndex(item => item.destination === "ksmAh" && item.source_nonce === Number(event.payload.source_nonce));
+        if (index !== -1) {
+          console.log("found match:", prev[index]);
+          const newQueue = [...prev];
+          newQueue[index].hasArrivedOnOtherSide = true;
+          setPorteerQueue(newQueue);
+        }
+      })
+    );
+
+    console.log("Setting up subscription to ForeignAssets.Issued on dotAh");
+    subscriptions.push(dotAhApi.event.ForeignAssets.Issued.watch(() => true)
+      .forEach((event) => {
+        console.log("Detected ForeignAssets.Issued event on dotAh to", event.payload.owner?.toString(), " amount", event.payload.amount, " asset: ", event.payload.asset_id.toString());
+        const prev = porteerQueueRef.current;
+        const ownerInfo = getSs58AddressInfo(event.payload.owner);
+        const index = prev.findIndex(item => {
+          const whoInfo = getSs58AddressInfo(item.who);
+          return item.destination === "dotAh" &&
+            ownerInfo.isValid &&
+            whoInfo.isValid &&
+            whoInfo.publicKey.length === ownerInfo.publicKey.length &&
+            whoInfo.publicKey.every((v, i) => v === ownerInfo.publicKey[i])
+        });
+        if (index !== -1) {
+          console.log("found match:", prev[index]);
+          const newQueue = [...prev];
+          newQueue[index].hasArrivedOnDestination = true;
+          setPorteerQueue(newQueue);
+        }
+      })
+    );
     return () => {
       subscriptions.forEach(sub => {
         if (sub && typeof sub.unsubscribe === "function") {
