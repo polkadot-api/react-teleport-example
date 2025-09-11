@@ -4,6 +4,7 @@ import { smoldot } from "./smoldot"
 import { ksmRelayChain } from "./ksm"
 import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat"
 import { getWsProvider } from "polkadot-api/ws-provider/web";
+import { KAH_WS_URL } from "@/config";
 
 // const smoldotParaChain = Promise.all([
 //   ksmRelayChain,
@@ -15,6 +16,5 @@ import { getWsProvider } from "polkadot-api/ws-provider/web";
 // export const ksmAhClient = createClient(getSmProvider(smoldotParaChain))
 
 export const ksmAhClient = createClient(withPolkadotSdkCompat(
-  // getWsProvider("ws://localhost:8000") // chopsticks
-  getWsProvider("ws://localhost:9010") // zombienet
+  getWsProvider(KAH_WS_URL)
 ))
