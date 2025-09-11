@@ -5,12 +5,12 @@ import { dotRelayChain } from "./dot"
 import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat"
 import { getWsProvider } from "polkadot-api/ws-provider/web";
 
-const smoldotParaChain = Promise.all([
-  dotRelayChain,
-  import("polkadot-api/chains/polkadot_asset_hub"),
-]).then(([relayChain, { chainSpec }]) =>
-  smoldot.addChain({ chainSpec, potentialRelayChains: [relayChain] }),
-)
+// const smoldotParaChain = Promise.all([
+//   dotRelayChain,
+//   import("polkadot-api/chains/polkadot_asset_hub"),
+// ]).then(([relayChain, { chainSpec }]) =>
+//   smoldot.addChain({ chainSpec, potentialRelayChains: [relayChain] }),
+// )
 
 // export const dotAhClient = createClient(getSmProvider(smoldotParaChain))
 

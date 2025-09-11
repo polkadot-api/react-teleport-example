@@ -1,7 +1,7 @@
 import dot from "./dot"
 import ksm from "./ksm"
-import wnd from "./wnd"
-import pas from "./pas"
+// import wnd from "./wnd"
+// import pas from "./pas"
 
 import { AssetId, AssetInChain, ChainId } from "./types"
 

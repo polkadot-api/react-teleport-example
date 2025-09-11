@@ -2,6 +2,7 @@ import { createClient } from "polkadot-api"
 import { getWsProvider } from "polkadot-api/ws-provider/web";
 import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat";
 
+// to refresh types: papi add itk -w wss://kusama.api.integritee.network
 
 export const itkClient = createClient(withPolkadotSdkCompat(
   //getWsProvider("wss://kusama.api.integritee.network")
