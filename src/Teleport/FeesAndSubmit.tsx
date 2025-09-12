@@ -181,63 +181,64 @@ const SubmitDialog: React.FC<
   }, []);
 
   return (
-    <Dialog open={openDialog}>
-      <DialogTrigger>
-        <Button
-          onClick={() => {
-            setDialogText("Waiting for the transaction to be signed")
-            setOpenDialog(true)
-            signSubmitAndWatch.current!(signer).subscribe({
-              next: (e) => {
-                switch (e.type) {
-                  case "signed": {
-                    setDialogText("The transaction has been signed")
-                    break
-                  }
-                  case "broadcasted": {
-                    setDialogText(
-                      "The transaction has been validated and broadcasted",
-                    )
-                    break
-                  }
-                  case "txBestBlocksState": {
-                    if (e.found) {
-                      if (e.ok) {
-                        setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), and it's being successful! 🎉`)
-                        console.log("events:", e.events)
-                        // TODO this is a hack! we should not instantiate a new api of hardcoded type here, but it should work for both ITK and ITP
-                        const filteredEvents = itkApi.event.Porteer.PortedTokens.filter(e.events);
-                        console.log("filteredEvents:", filteredEvents);
-                        if (filteredEvents.length > 0) {
-                          // TODO: replace amount with source_nonce
-                          const amount = filteredEvents[0].amount;
-                          const who = filteredEvents[0].who.toString();
-                          const source_nonce = Number(filteredEvents[0].source_nonce);
-                          console.log("found PortedTokens Event with amount:", amount, ", who:", who, ", source_nonce:", source_nonce);
-                          const newElement: PorteerQueueElement = {
-                            time_included: new Date(),
-                            who: who,
-                            amount: amount,
-                            destination: to,
-                            hasArrivedOnOtherSide: false,
-                            time_arrived_other_side: undefined,
-                            hasArrivedOnDestination: false,
-                            time_arrived_destination: undefined,
-                            source_nonce: source_nonce
-                          };
-                          setPorteerQueue(prev => [...prev, newElement])
-                        }
-                      } else {
-                        setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), but it's failing... 😞`)
-                      }
-                    } else if (e.isValid) {
-                      setDialogText("The transaction has been validated and broadcasted")
-                    } else {
-                      setDialogText("The transaction is not valid anymore in the latest known best block")
+    <>
+      <Dialog open={openDialog}>
+        <DialogTrigger asChild>
+          <Button
+            onClick={() => {
+              setDialogText("Waiting for the transaction to be signed")
+              setOpenDialog(true)
+              signSubmitAndWatch.current!(signer).subscribe({
+                next: (e) => {
+                  switch (e.type) {
+                    case "signed": {
+                      setDialogText("The transaction has been signed")
+                      break
                     }
-                    break
-                  }
-                  case "finalized": {
+                    case "broadcasted": {
+                      setDialogText(
+                        "The transaction has been validated and broadcasted",
+                      )
+                      break
+                    }
+                    case "txBestBlocksState": {
+                      if (e.found) {
+                        if (e.ok) {
+                          setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), and it's being successful! 🎉`)
+                          console.log("events:", e.events)
+                          // TODO this is a hack! we should not instantiate a new api of hardcoded type here, but it should work for both ITK and ITP
+                          const filteredEvents = itkApi.event.Porteer.PortedTokens.filter(e.events);
+                          console.log("filteredEvents:", filteredEvents);
+                          if (filteredEvents.length > 0) {
+                            // TODO: replace amount with source_nonce
+                            const amount = filteredEvents[0].amount;
+                            const who = filteredEvents[0].who.toString();
+                            const source_nonce = Number(filteredEvents[0].source_nonce);
+                            console.log("found PortedTokens Event with amount:", amount, ", who:", who, ", source_nonce:", source_nonce);
+                            const newElement: PorteerQueueElement = {
+                              time_included: new Date(),
+                              who: who,
+                              amount: amount,
+                              destination: to,
+                              hasArrivedOnOtherSide: false,
+                              time_arrived_other_side: undefined,
+                              hasArrivedOnDestination: false,
+                              time_arrived_destination: undefined,
+                              source_nonce: source_nonce
+                            };
+                            setPorteerQueue(prev => [...prev, newElement])
+                          }
+                        } else {
+                          setDialogText(`The transaction was found in a best block (${e.block.hash}[${e.block.index}]), but it's failing... 😞`)
+                        }
+                      } else if (e.isValid) {
+                        setDialogText("The transaction has been validated and broadcasted")
+                      } else {
+                        setDialogText("The transaction is not valid anymore in the latest known best block")
+                      }
+                      break
+                    }
+                    case "finalized": {
                     setDialogText(
                       `The transaction is in a finalized block (${
                         e.block.hash
@@ -268,30 +269,35 @@ const SubmitDialog: React.FC<
         >
           Teleport
         </Button>
-        <div className="mt-4 text-left">
-          TEER bridge queue:
-          <ul className="grid gap-3 m-1">
-            {porteerQueue.map((item, idx) => (
-              <li key={idx}>
-                <div>who: { item.who }</div>
-                <div>amount: {item.amount.toString()}</div>
-                <div>nonce: {item.source_nonce}</div>
-                {!item.hasArrivedOnDestination && <div>submitted {formatTimeAgo(BigInt(item.time_included.getTime()), now)}</div>}
-                {item.hasArrivedOnOtherSide && !item.hasArrivedOnDestination && item.time_arrived_other_side && <div>arrived on other side after {Math.round((item.time_arrived_other_side.getTime() - item.time_included.getTime()) / 1000)} seconds</div>}
-                {item.hasArrivedOnDestination && item.time_arrived_destination && <div>arrived on destination after {Math.round((item.time_arrived_destination.getTime() - item.time_included.getTime()) / 1000)} seconds</div>}
-                {!item.hasArrivedOnDestination && (
-                  <span className="inline-block ml-2 w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></span>
-                )}
-              </li>
-        ))}
-          </ul>
-        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>{children}</DialogTitle>
         <DialogDescription>{dialogText}</DialogDescription>
       </DialogContent>
     </Dialog>
+    
+    {/* TEER bridge queue displayed below the dialog */}
+    <div className="mt-4 text-left">
+      TEER bridge queue:
+      <ul className="grid gap-3 m-1">
+        {porteerQueue.map((item, idx) => (
+          <li key={idx}>
+            <div>who: { item.who }</div>
+            <div>amount: {item.amount.toString()}</div>
+            <div>nonce: {item.source_nonce}</div>
+            {!item.hasArrivedOnDestination && <div>submitted {formatTimeAgo(BigInt(item.time_included.getTime()), now)}</div>}
+            {item.hasArrivedOnOtherSide && !item.hasArrivedOnDestination && item.time_arrived_other_side && 
+              <div>arrived on other side after {Math.round((item.time_arrived_other_side.getTime() - item.time_included.getTime()) / 1000)} seconds</div>}
+            {item.hasArrivedOnDestination && item.time_arrived_destination && 
+              <div>arrived on destination after {Math.round((item.time_arrived_destination.getTime() - item.time_included.getTime()) / 1000)} seconds</div>}
+            {!item.hasArrivedOnDestination && (
+              <span className="inline-block ml-2 w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+    </>
   )
 }
 
