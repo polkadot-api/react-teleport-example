@@ -1,6 +1,28 @@
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
+
+/* Import Whyteinktrap font */
+@font-face {
+  font-family: 'Whyteinktrap';
+  src: url('/fonts/Whyteinktrap-Regular.woff2') format('woff2'),
+       url('/fonts/Whyteinktrap-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Whyteinktrap';
+  src: url('/fonts/Whyteinktrap-Bold.woff2') format('woff2'),
+       url('/fonts/Whyteinktrap-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -102,33 +124,34 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    /* Use the same variables as our root theme since we're already creating a dark theme */
+    --background: 240 11% 8%; /* #111119 */
+    --foreground: 0 0% 100%; /* white */
 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 240 11% 12%; /* slightly lighter than background */
+    --card-foreground: 0 0% 100%; /* white text */
 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 240 11% 12%; /* slightly lighter than background */
+    --popover-foreground: 0 0% 100%; /* white text */
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 220 70% 60%; /* blue-ish */
+    --primary-foreground: 0 0% 100%; /* white */
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 240 11% 20%; /* slightly lighter than card */
+    --secondary-foreground: 0 0% 100%; /* white */
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 240 11% 15%; /* between background and card */
+    --muted-foreground: 0 0% 70%; /* light grey */
 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 220 70% 50%; /* slightly darker than primary */
+    --accent-foreground: 0 0% 100%; /* white */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 50%; /* red */
+    --destructive-foreground: 0 0% 100%; /* white */
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --border: 240 11% 25%; /* visible but subtle borders */
+    --input: 240 11% 20%; /* darker input fields */
+    --ring: 220 70% 60%; /* matches primary */
   }
 }
 
@@ -137,37 +160,40 @@
     @apply border-border;
   }
   body {
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
     @apply bg-background text-foreground;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 16px;
+    font-family: 'Whyteinktrap', sans-serif;
+    font-weight: bold;
+  }
+}
+
+.warning-box, .error-box, .good-box {
+  border-radius: 4px;
+  padding: 8px;
+  
+  font-size: 12px;
+  font-weight: normal;
+  text-align: center;
 }
 
 .warning-box {
   background: #fff3cd;
   color: #856404;
-  border: 1px solid #ffeeba;
-  border-radius: 4px;
-  padding: 8px;
-  margin-top: 8px;
-  font-weight: bold;
-  text-align: center;
+  border-color: #ffeeba;
 }
+
 .error-box {
   background: #f8d7da;
   color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  padding: 8px;
-  margin-top: 8px;
-  font-weight: bold;
-  text-align: center;
+  border-color: #f5c6cb;
 }
+
 .good-box {
   background: #d4edda;
   color: #155724;
-  border: 1px solid #c3e6cb;
-  border-radius: 4px;
-  padding: 8px;
-  margin-top: 8px;
-  font-weight: bold;
-  text-align: center;
+  border-color: #c3e6cb;
 }

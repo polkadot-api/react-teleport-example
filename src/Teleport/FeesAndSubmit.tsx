@@ -268,7 +268,7 @@ const SubmitDialog: React.FC<
         >
           Teleport
         </Button>
-        <div>
+        <div className="mt-4 text-left">
           TEER bridge queue:
           <ul className="grid gap-3 m-1">
             {porteerQueue.map((item, idx) => (
