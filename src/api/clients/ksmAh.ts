@@ -6,6 +6,8 @@ import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat"
 import { getWsProvider } from "polkadot-api/ws-provider/web";
 import { KAH_WS_URL } from "@/config";
 
+// regenerate types: papi add ksmAh -w wss://kusama-asset-hub-rpc.polkadot.io
+
 // const smoldotParaChain = Promise.all([
 //   ksmRelayChain,
 //   import("polkadot-api/chains/ksmcc3_asset_hub"),

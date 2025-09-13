@@ -6,6 +6,8 @@ import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat"
 import { getWsProvider } from "polkadot-api/ws-provider/web";
 import { PAH_WS_URL } from "@/config";
 
+
+// regenerate types: papi add dotAh -w wss://polkadot-asset-hub-rpc.polkadot.io
 // const smoldotParaChain = Promise.all([
 //   dotRelayChain,
 //   import("polkadot-api/chains/polkadot_asset_hub"),

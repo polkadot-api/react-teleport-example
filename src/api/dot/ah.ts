@@ -1,7 +1,7 @@
 import {
-  XcmV3Junction,
-  XcmV3JunctionNetworkId,
-  XcmV3Junctions,
+  XcmV5Junction,
+  XcmV5NetworkId,
+  XcmV5Junctions,
   XcmVersionedLocation,
   XcmVersionedAssets,
   XcmV3MultiassetFungibility,
@@ -30,7 +30,7 @@ const dot: AssetInChain = {
     ksmAh: (from, amount, to) =>
       api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(
-          XcmV3JunctionNetworkId.Kusama(),
+          XcmV5NetworkId.Kusama(),
           1000,
           getNativeAsset(1, amount),
           from,
@@ -40,10 +40,10 @@ const dot: AssetInChain = {
   },
 }
 
-const ksmInDotAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
+const ksmInDotAh: Parameters<typeof XcmVersionedLocation.V5>[0] = {
   parents: 2,
-  interior: XcmV3Junctions.X1(
-    XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Kusama()),
+  interior: XcmV5Junctions.X1(
+    XcmV5Junction.GlobalConsensus(XcmV5NetworkId.Kusama()),
   ),
 }
 
@@ -59,7 +59,7 @@ const ksm: AssetInChain = {
         fromAssetHubToForeign(
           XcmV4JunctionNetworkId.Kusama(),
           1000,
-          XcmVersionedAssets.V4([
+          XcmVersionedAssets.V5([
             {
               id: ksmInDotAh,
               fun: XcmV3MultiassetFungibility.Fungible(amount),
@@ -73,10 +73,10 @@ const ksm: AssetInChain = {
   },
 }
 
-const teerInDotAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
+const teerInDotAh: Parameters<typeof XcmVersionedLocation.V5>[0] = {
   parents: 1,
-  interior: XcmV3Junctions.X1(
-    XcmV3Junction.Parachain(2039),
+  interior: XcmV5Junctions.X1(
+    XcmV5Junction.Parachain(2039),
   ),
 }
 
@@ -90,7 +90,7 @@ const teer: AssetInChain = {
       api.tx.PolkadotXcm.transfer_assets(
         fromSystemToSibling(
           2039,
-          XcmVersionedAssets.V4([
+          XcmVersionedAssets.V5([
             {
               id: teerInDotAh,
               fun: XcmV3MultiassetFungibility.Fungible(amount),
