@@ -140,23 +140,6 @@ export const fromSystemToSibling = (
   weight_limit: XcmV3WeightLimit.Unlimited(),
 })
 
-/*
-export const toAssetHub = (
-  from: PolkadotSigner,
-  amount: bigint,
-  to?: SS58String,
-) => ({
-  dest: XcmVersionedMultiLocation.V3({
-    parents: 1,
-    interior: DotXcmV3Junctions.Here(),
-  }),
-  beneficiary: getBeneficiary(to ?? from.publicKey),
-  assets: getNativeAsset(1, amount),
-  fee_asset_item: 0,
-  weight_limit: XcmV3WeightLimit.Unlimited(),
-})
-*/
-
 type GenericApi = TypedApi<typeof dotAh>
 
 export const watchAccoutFreeBalance = (api: {
