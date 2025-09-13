@@ -42,7 +42,7 @@ const ksm: AssetInChain = {
     dotAh: (from, amount, to) =>
       api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(
-          XcmV3JunctionNetworkId.Polkadot(),
+          XcmV5NetworkId.Polkadot(),
           1000,
           getNativeAsset(1, amount),
           from,
@@ -87,8 +87,8 @@ const dot: AssetInChain = {
 
 const teerInKsmAh: Parameters<typeof XcmVersionedLocation.V5>[0] = {
   parents: 1,
-  interior: XcmV3Junctions.X1(
-    XcmV3Junction.Parachain(2015),
+  interior: XcmV5Junctions.X1(
+    XcmV5Junction.Parachain(2015),
   ),
 }
 
