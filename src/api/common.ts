@@ -1,24 +1,24 @@
 import { AccountId, PolkadotSigner, TypedApi } from "polkadot-api"
 import {
-  XcmV3Junction,
-  XcmV3JunctionNetworkId,
-  XcmV3Junctions,
   XcmV3MultiassetFungibility,
   XcmV3WeightLimit,
+  XcmV5Junction,
+  XcmV5Junctions,
+  XcmV5NetworkId,
   XcmVersionedAssets,
   XcmVersionedLocation,
   dotAh,
 } from "@polkadot-api/descriptors"
 import { Binary, Enum, SS58String } from "polkadot-api"
-import { combineLatest, from, map } from "rxjs"
+import { combineLatest, from, map, Observable } from "rxjs"
 
 const encodeAccount = AccountId().enc
 
 export const getBeneficiary = (address: SS58String | Uint8Array) =>
-  XcmVersionedLocation.V4({
+  XcmVersionedLocation.V5({
     parents: 0,
-    interior: XcmV3Junctions.X1(
-      XcmV3Junction.AccountId32({
+    interior: XcmV5Junctions.X1(
+      XcmV5Junction.AccountId32({
         network: undefined,
         id: Binary.fromBytes(
           address instanceof Uint8Array ? address : encodeAccount(address),
@@ -28,11 +28,11 @@ export const getBeneficiary = (address: SS58String | Uint8Array) =>
   })
 
 export const getNativeAsset = (parents: number, amount: bigint) =>
-  XcmVersionedAssets.V4([
+  XcmVersionedAssets.V5([
     {
       id: {
         parents,
-        interior: XcmV3Junctions.Here(),
+        interior: XcmV5Junctions.Here(),
       },
       fun: XcmV3MultiassetFungibility.Fungible(amount),
     },
@@ -56,9 +56,9 @@ export const fromRelayToParachain = (
   amount: bigint,
   to?: SS58String,
 ) => ({
-  dest: XcmVersionedLocation.V4({
+  dest: XcmVersionedLocation.V5({
     parents: 0,
-    interior: XcmV3Junctions.X1(XcmV3Junction.Parachain(paraId)),
+    interior: XcmV5Junctions.X1(XcmV5Junction.Parachain(paraId)),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets: getNativeAsset(0, amount),
@@ -71,9 +71,9 @@ export const fromAssetHubToRelay = (
   amount: bigint,
   to?: SS58String,
 ) => ({
-  dest: XcmVersionedLocation.V4({
+  dest: XcmVersionedLocation.V5({
     parents: 1,
-    interior: XcmV3Junctions.Here(),
+    interior: XcmV5Junctions.Here(),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets: getNativeAsset(1, amount),
@@ -103,17 +103,17 @@ export const fromEncointerToRelay = (
 })
 
 export const fromAssetHubToForeign = (
-  network: XcmV3JunctionNetworkId,
+  network: XcmV5NetworkId,
   parachainId: number,
   assets: XcmVersionedAssets,
   from: PolkadotSigner,
   to?: SS58String,
 ) => ({
-  dest: XcmVersionedLocation.V4({
+  dest: XcmVersionedLocation.V5({
     parents: 2,
-    interior: XcmV3Junctions.X2([
-      XcmV3Junction.GlobalConsensus(network),
-      XcmV3Junction.Parachain(parachainId),
+    interior: XcmV5Junctions.X2([
+      XcmV5Junction.GlobalConsensus(network),
+      XcmV5Junction.Parachain(parachainId),
     ]),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
@@ -189,17 +189,31 @@ export const watchAccoutFreeBalance = (api: {
 }
 
 export const watchForeingAssetAccoutFreeBalance =
-  (
+  <
+    A,
+    T extends {
+      balance: bigint
+      status: Enum<{
+        Liquid: undefined
+        Frozen: undefined
+        Blocked: undefined
+      }>
+    },
+  >(
     api: {
       query: {
         ForeignAssets: {
           Account: {
-            watchValue: GenericApi["query"]["ForeignAssets"]["Account"]["watchValue"]
+            watchValue: (
+              asset: A,
+              account: SS58String,
+              at: "best",
+            ) => Observable<T | undefined>
           }
         }
       }
     },
-    asset: { parents: number; interior: XcmV3Junctions },
+    asset: A,
   ) =>
   (account: SS58String) =>
     api.query.ForeignAssets.Account.watchValue(asset, account, "best").pipe(
