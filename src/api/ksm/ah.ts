@@ -1,7 +1,7 @@
 import {
-  XcmV3Junction,
-  XcmV3JunctionNetworkId,
-  XcmV3Junctions,
+  XcmV5Junction,
+  XcmV5NetworkId,
+  XcmV5Junctions,
   XcmVersionedLocation,
   XcmVersionedAssets,
   XcmV3MultiassetFungibility,
@@ -52,10 +52,10 @@ const ksm: AssetInChain = {
   },
 }
 
-const dotInKsmAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
+const dotInKsmAh: Parameters<typeof XcmVersionedLocation.V5>[0] = {
   parents: 2,
-  interior: XcmV3Junctions.X1(
-    XcmV3Junction.GlobalConsensus(XcmV3JunctionNetworkId.Polkadot()),
+  interior: XcmV5Junctions.X1(
+    XcmV5Junction.GlobalConsensus(XcmV5NetworkId.Polkadot()),
   ),
 }
 
@@ -85,7 +85,7 @@ const dot: AssetInChain = {
   },
 }
 
-const teerInKsmAh: Parameters<typeof XcmVersionedLocation.V4>[0] = {
+const teerInKsmAh: Parameters<typeof XcmVersionedLocation.V5>[0] = {
   parents: 1,
   interior: XcmV3Junctions.X1(
     XcmV3Junction.Parachain(2015),

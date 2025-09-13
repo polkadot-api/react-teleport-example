@@ -33,10 +33,10 @@
       "codeHash": "0x8cada8f706ffc7c9bd0c31985ec4f34520914778edefaa94b624bc6adea48a1c"
     },
     "ksmAh": {
-      "wsUrl": "wss://kusama-asset-hub-rpc.polkadot.io",
+      "wsUrl": "ws://localhost:8000",
       "metadata": ".papi/metadata/ksmAh.scale",
       "genesis": "0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a",
-      "codeHash": "0xc614bece9b065c25a8a4939343bf4171104d348a82caa987f1ce5829dd9f997e"
+      "codeHash": "0xbe293b003ee8173f17e33a8ef2eb2460a2057b9bfa35090261c62eb4072a5a63"
     },
     "pas": {
       "chain": "paseo",
