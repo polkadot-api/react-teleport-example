@@ -3,6 +3,7 @@ export { dotAhClient } from "./dotAh"
 
 export { ksmClient } from "./ksm"
 export { ksmAhClient } from "./ksmAh"
+export { ksmEncClient } from "./ksmEnc"
 
 export { wndClient } from "./wnd"
 export { wndAhClient } from "./wndAh"

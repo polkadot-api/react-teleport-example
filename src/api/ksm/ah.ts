@@ -9,7 +9,7 @@ import { ksmAhClient } from "@/api/clients"
 import { AssetInChain } from "../types"
 import {
   fromAssetHubToForeign,
-  fromAssetHubToRelay,
+  fromAssetHubToRelay, fromSystemToSibling,
   getNativeAsset,
   watchAccoutFreeBalance,
   watchForeingAssetAccoutFreeBalance,
@@ -24,6 +24,15 @@ const ksm: AssetInChain = {
   teleport: {
     ksm: (...args) =>
       api.tx.PolkadotXcm.transfer_assets(fromAssetHubToRelay(...args)),
+    ksmEnc: (from, amount, to) =>
+      api.tx.PolkadotXcm.limited_teleport_assets(
+        fromSystemToSibling(
+          1001,
+          getNativeAsset(1, amount),
+          from,
+          to,
+        ),
+      ),
     dotAh: (from, amount, to) =>
       api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(

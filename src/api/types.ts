@@ -8,6 +8,7 @@ export type ChainId =
   | "wndAh"
   | "ksm"
   | "ksmAh"
+  | "ksmEnc"
   | "pas"
   | "pasAh"
   | "passet"
