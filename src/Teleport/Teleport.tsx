@@ -118,6 +118,16 @@ export const Teleport: React.FC = () => {
         />
       </div>
       <div className="flex flex-col space-y-1.5">
+        <Label htmlFor="name">To Chain:</Label>
+        <Selector
+          value={to.selected}
+          onChange={(value) =>
+            dispatch({ type: "to", value: value as ChainId })
+          }
+          values={to.options.map(chainToSelectorValue)}
+        />
+      </div>
+      <div className="flex flex-col space-y-1.5">
         <Label htmlFor="name">Asset:</Label>
         <Selector
           value={asset.selected}
@@ -128,16 +138,6 @@ export const Teleport: React.FC = () => {
             key,
             display: key,
           }))}
-        />
-      </div>
-      <div className="flex flex-col space-y-1.5">
-        <Label htmlFor="name">To Chain:</Label>
-        <Selector
-          value={to.selected}
-          onChange={(value) =>
-            dispatch({ type: "to", value: value as ChainId })
-          }
-          values={to.options.map(chainToSelectorValue)}
         />
       </div>
       <Card className="w-full max-w-sm">

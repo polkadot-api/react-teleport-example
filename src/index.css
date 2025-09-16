@@ -8,8 +8,8 @@
 /* Import Whyteinktrap font */
 @font-face {
   font-family: 'Whyteinktrap';
-  src: url('/fonts/Whyteinktrap-Regular.woff2') format('woff2'),
-       url('/fonts/Whyteinktrap-Regular.woff') format('woff');
+  src: url('/fonts/WhyteInktrap-Regular.woff2') format('woff2'),
+       url('/fonts/WhyteInktrap-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -17,8 +17,8 @@
 
 @font-face {
   font-family: 'Whyteinktrap';
-  src: url('/fonts/Whyteinktrap-Bold.woff2') format('woff2'),
-       url('/fonts/Whyteinktrap-Bold.woff') format('woff');
+  src: url('/fonts/WhyteInktrap-Bold.woff2') format('woff2'),
+       url('/fonts/WhyteInktrap-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
