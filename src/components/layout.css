@@ -1,0 +1,142 @@
+/* Header Styles */
+.header {
+  position: fixed;
+  background: linear-gradient(180deg, #0a0a0f 0%, rgba(10, 10, 15, 0) 100%);
+  backdrop-filter: blur(4px);
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 25px 0;
+  z-index: 10;
+  transition: 0.3s ease;
+}
+
+/* Logo hover effect */
+.blue-hover {
+  transition: fill 0.3s ease;
+}
+
+svg:hover .blue-hover {
+  fill: #5B92FF !important;
+}
+
+.show-on-hover {
+  transition: fill-opacity 0.3s;
+}
+
+svg:hover .show-on-hover {
+  fill-opacity: 1 !important;
+}
+
+/* Social icons hover effect */
+.social-icon {
+  fill: #FFFFFF;
+  fill-opacity: 0.5;
+  transition: fill-opacity 0.3s ease;
+}
+
+.social-icon-link:hover .social-icon {
+  fill-opacity: 1;
+}
+
+/* Incognitee button hover effect */
+a[href="https://app.incognitee.io"] {
+  border-color: rgba(255, 255, 255, 0.2);
+  transition: border-color 0.3s ease;
+}
+
+a[href="https://app.incognitee.io"]:hover {
+  border-color: rgba(255, 255, 255, 1);
+}
+
+/* Background image positioning */
+.top-lines {
+  position: absolute;
+  right: -430px;
+  top: -300px;
+  width: 1468px;
+  transform: rotate(-159.84deg);
+}
+
+.bottom-lines {
+  position: absolute;
+  left: -280px;
+  top: -1062px;
+  width: 1060px;
+  transform: rotate(159.84deg) scale(-1, 1);
+  z-index: -1;
+}
+
+/* Responsive media queries */
+@media (max-width: 1024px) {
+  .top-lines {
+    width: 1417px;
+  }
+  
+  .bottom-lines {
+    width: 1023px;
+    left: -245px;
+    top: -992px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-lines {
+    width: 838px;
+    right: -208px;
+    top: -180px;
+  }
+  
+  .bottom-lines {
+    width: 740px;
+    left: -185px;
+    top: -620px;
+  }
+}
+
+@media (max-width: 640px) {
+  .top-lines {
+    width: 530px;
+    right: -141px;
+    top: -70px;
+  }
+  
+  .bottom-lines {
+    width: 634px;
+    left: -115px;
+    top: -216px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-lines {
+    right: -171px;
+    top: -7px;
+  }
+}
+
+/* Footer styles */
+.footer {
+  background: #0a0a0f;
+  padding-top: 48px;
+  padding-bottom: 24px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Ensure all footer links are clickable */
+footer a, footer a:hover, footer a:active, footer a:visited {
+  position: relative;
+  z-index: 20;
+}
+
+/* Fix for wrapper layout */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-wrapper {
+  flex: 1;
+}
