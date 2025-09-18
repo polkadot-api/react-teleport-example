@@ -1,6 +1,6 @@
 import { passet as descriptors } from "@polkadot-api/descriptors"
 import { AssetInChain } from "../types"
-import { fromAssetHubToRelay, watchAccoutFreeBalance } from "../common"
+import { fromParaToRelay, watchAccoutFreeBalance } from "../common"
 import { passetClient } from "../clients"
 
 const api = passetClient.getTypedApi(descriptors)
@@ -12,7 +12,7 @@ const pas: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
     pas: (...args) =>
-      api.tx.PolkadotXcm.transfer_assets(fromAssetHubToRelay(...args)),
+      api.tx.PolkadotXcm.transfer_assets(fromParaToRelay(...args)),
   },
 }
 

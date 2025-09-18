@@ -8,7 +8,7 @@ import {
 import { dotAhClient } from "@/api/clients"
 import { AssetInChain } from "../types"
 import {
-  fromAssetHubToRelay,
+  fromParaToRelay,
   fromAssetHubToForeign,
   getNativeAsset,
   watchAccoutFreeBalance,
@@ -23,7 +23,7 @@ const dot: AssetInChain = {
   watchFreeBalance: watchAccoutFreeBalance(api),
   teleport: {
     dot: (...args) =>
-      api.tx.PolkadotXcm.transfer_assets(fromAssetHubToRelay(...args)),
+      api.tx.PolkadotXcm.transfer_assets(fromParaToRelay(...args)),
     ksmAh: (from, amount, to) =>
       api.tx.PolkadotXcm.transfer_assets(
         fromAssetHubToForeign(

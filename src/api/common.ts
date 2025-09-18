@@ -38,18 +38,6 @@ export const getNativeAsset = (parents: number, amount: bigint) =>
     },
   ])
 
-export const fromRelayToAssetHub = (
-  from: PolkadotSigner,
-  amount: bigint,
-  to?: SS58String,
-) => fromRelayToParachain(1000, from, amount, to)
-
-export const fromRelayToEncointer = (
-  from: PolkadotSigner,
-  amount: bigint,
-  to?: SS58String,
-) => fromRelayToParachain(1001, from, amount, to)
-
 export const fromRelayToParachain = (
   paraId: number,
   from: PolkadotSigner,
@@ -66,7 +54,7 @@ export const fromRelayToParachain = (
   weight_limit: XcmV3WeightLimit.Unlimited(),
 })
 
-export const fromAssetHubToRelay = (
+export const fromParaToRelay = (
   from: PolkadotSigner,
   amount: bigint,
   to?: SS58String,
@@ -75,27 +63,6 @@ export const fromAssetHubToRelay = (
     parents: 1,
     interior: XcmV5Junctions.Here(),
   }),
-  beneficiary: getBeneficiary(to ?? from.publicKey),
-  assets: getNativeAsset(1, amount),
-  fee_asset_item: 0,
-  weight_limit: XcmV3WeightLimit.Unlimited(),
-})
-
-export const fromEncointerToRelay = (
-  from: PolkadotSigner,
-  amount: bigint,
-  to?: SS58String,
-) => ({
-  dest: {
-    type: "V3" as const,
-    value: {
-      parents: 1,
-      interior: {
-        type: "Here" as const,
-        value: undefined,
-      },
-    },
-  },
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets: getNativeAsset(1, amount),
   fee_asset_item: 0,
@@ -130,9 +97,7 @@ export const fromSystemToSibling = (
 ) => ({
   dest: XcmVersionedLocation.V4({
     parents: 1,
-    interior: XcmV3Junctions.X1(
-      XcmV3Junction.Parachain(parachainId),
-    ),
+    interior: XcmV5Junctions.X1(XcmV5Junction.Parachain(parachainId)),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets,
