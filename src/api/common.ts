@@ -38,12 +38,6 @@ export const getNativeAsset = (parents: number, amount: bigint) =>
     },
   ])
 
-export const fromRelayToAssetHub = (
-  from: PolkadotSigner,
-  amount: bigint,
-  to?: SS58String,
-) => fromRelayToParachain(1000, from, amount, to)
-
 export const fromRelayToParachain = (
   paraId: number,
   from: PolkadotSigner,
@@ -60,7 +54,7 @@ export const fromRelayToParachain = (
   weight_limit: XcmV3WeightLimit.Unlimited(),
 })
 
-export const fromAssetHubToRelay = (
+export const fromParaToRelay = (
   from: PolkadotSigner,
   amount: bigint,
   to?: SS58String,
@@ -88,6 +82,22 @@ export const fromAssetHubToForeign = (
       XcmV5Junction.GlobalConsensus(network),
       XcmV5Junction.Parachain(parachainId),
     ]),
+  }),
+  beneficiary: getBeneficiary(to ?? from.publicKey),
+  assets,
+  fee_asset_item: 0,
+  weight_limit: XcmV3WeightLimit.Unlimited(),
+})
+
+export const fromSystemToSibling = (
+  parachainId: number,
+  assets: XcmVersionedAssets,
+  from: PolkadotSigner,
+  to?: SS58String,
+) => ({
+  dest: XcmVersionedLocation.V4({
+    parents: 1,
+    interior: XcmV5Junctions.X1(XcmV5Junction.Parachain(parachainId)),
   }),
   beneficiary: getBeneficiary(to ?? from.publicKey),
   assets,
